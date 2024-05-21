@@ -1,15 +1,15 @@
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { User } from '../userPage/Register';
+import { User } from '../pageUser/Register';
 import PensionMain from './PensionMain';
-import IconPensionHome from '../imgs/pensionMain.svg';
-import IconActivePensionHome from '../imgs/pensionMainA.svg';
-import IconChat from '../imgs/pensionChat.svg';
-import IconActiveChat from '../imgs/pensionChatA.svg';
-import IconInfo from '../imgs/pensionInvestInfo.svg';
-import IconActiveInfo from '../imgs/pensionInvestInfoA.svg';
-import IconUser from '../imgs/pensionUser.svg';
-import IconActiveUser from '../imgs/pensionUserA.svg';
+import IconPensionHome from '../asset/imgs/pensionMain.svg';
+import IconActivePensionHome from '../asset/imgs/pensionMainA.svg';
+import IconChat from '../asset/imgs/pensionChat.svg';
+import IconActiveChat from '../asset/imgs/pensionChatA.svg';
+import IconInfo from '../asset/imgs/pensionInvestInfo.svg';
+import IconActiveInfo from '../asset/imgs/pensionInvestInfoA.svg';
+import IconUser from '../asset/imgs/pensionUser.svg';
+import IconActiveUser from '../asset/imgs/pensionUserA.svg';
 
 export default function Main() {
   const location = useLocation();

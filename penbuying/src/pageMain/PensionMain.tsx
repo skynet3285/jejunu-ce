@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import PensionInvestBox from './PensionInvestBox';
+import PensionInvestBox from '../component/PensionInvestBox';
 import executeQuery from '../module/sql';
 
 interface Pension {

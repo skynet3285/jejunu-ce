@@ -5,7 +5,7 @@ import React, {
   useMemo,
   PropsWithChildren,
 } from 'react';
-import { User } from './userPage/Register';
+import { User } from './pageUser/Register';
 
 export interface UserContextType {
   user: User;
