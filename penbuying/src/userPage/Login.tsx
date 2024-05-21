@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from './Register';
 import executeQuery from '../module/sql';
@@ -27,11 +27,19 @@ const loginUser = async (user: UserLogin): Promise<User | null> => {
 export default function Login() {
   const navigate = useNavigate();
   const { setUser } = useUser();
-
   const [userLogin, setUserLogin] = useState<UserLogin>({
     user_id: '',
     user_pw: '',
   });
+
+  useEffect(() => {
+    const data = sessionStorage.getItem('userInfo');
+    if (data !== null) {
+      const userInfo = JSON.parse(data) as User;
+      navigate('/main/pensionMain');
+      alert(`${userInfo.user_name}님 안녕하세요.`);
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,10 +60,11 @@ export default function Login() {
     const response = await loginUser(userLogin);
     if (response) {
       const user = response as User;
+      sessionStorage.setItem('userInfo', JSON.stringify(user));
       alert(`${user.user_name}님 안녕하세요.`);
       setUser(user);
 
-      navigate('/main/PensionMain');
+      navigate('/main/pensionMain');
       return;
     }
     alert('아이디 패스워드를 확인하세요');

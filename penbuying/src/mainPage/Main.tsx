@@ -1,5 +1,6 @@
-import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { User } from '../userPage/Register';
 import PensionMain from './PensionMain';
 import IconPensionHome from '../imgs/pensionMain.svg';
 import IconActivePensionHome from '../imgs/pensionMainA.svg';
@@ -13,6 +14,21 @@ import IconActiveUser from '../imgs/pensionUserA.svg';
 export default function Main() {
   const location = useLocation();
   const [select, setSelect] = useState<number>(0);
+  const [user, setUser] = useState<User>({ user_id: '', user_name: '' });
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const data = sessionStorage.getItem('userInfo');
+    if (data !== null) {
+      setIsActive(true);
+      const userInfo = JSON.parse(data) as User;
+      setUser(userInfo);
+    } else {
+      navigate('/');
+      alert(`로그인이 필요합니다.`);
+    }
+  }, []);
 
   useEffect(() => {
     switch (location.pathname) {
@@ -47,57 +63,74 @@ export default function Main() {
           <Route path="/my" element={<PensionMain />} />
         </Routes>
       </div>
-      <Outlet />
-      <footer className="flex h-[6rem] w-full">
-        <a
-          onClick={() => setSelect(0)}
-          href="/main/pensionMain"
-          className="flex w-full flex-col items-center justify-center"
-        >
-          {select === 0 ? (
-            <img src={IconActivePensionHome} alt="pension home" />
-          ) : (
-            <img src={IconPensionHome} alt="pension home" />
-          )}
-          <p className={`${getColor(0)} text-xs`}>펜션공구</p>
-        </a>
-        <a
-          onClick={() => setSelect(1)}
-          href="/main/chat"
-          className="flex w-full flex-col items-center justify-center"
-        >
-          {select === 1 ? (
-            <img src={IconActiveChat} alt="pension chat" />
-          ) : (
-            <img src={IconChat} alt="pension chat" />
-          )}
-          <p className={`${getColor(1)} text-xs`}>채팅</p>
-        </a>
-        <a
-          onClick={() => setSelect(2)}
-          href="/main/investGuide"
-          className="flex w-full flex-col items-center justify-center"
-        >
-          {select === 2 ? (
-            <img src={IconActiveInfo} alt="pension info" />
-          ) : (
-            <img src={IconInfo} alt="pension info" />
-          )}
-          <p className={`${getColor(2)} text-xs`}>투자가이드</p>
-        </a>
-        <a
-          onClick={() => setSelect(3)}
-          href="/main/my"
-          className="flex w-full flex-col items-center justify-center"
-        >
-          {select === 3 ? (
-            <img src={IconActiveUser} alt="pension user" />
-          ) : (
-            <img src={IconUser} alt="pension user" />
-          )}
-          <p className={`${getColor(3)} text-xs`}>My</p>
-        </a>
-      </footer>
+      {isActive && (
+        <div className="flex flex-col">
+          <div className="flex w-full justify-center">
+            <div className="flex w-[21rem] space-x-1">
+              <p className="bg-cyan-100 p-2 text-center">
+                {user.user_id}({user.user_name})님 안녕하세요
+              </p>
+              <button
+                className="rounded bg-red-700 p-2 text-white"
+                type="button"
+                onClick={() => {
+                  sessionStorage.removeItem('userInfo');
+                  navigate('/');
+                  alert('로그아웃 되었습니다.');
+                }}
+              >
+                로그아웃
+              </button>
+            </div>
+          </div>
+          <footer className="flex h-[6rem] w-full">
+            <a
+              href="/main/pensionMain"
+              className="flex w-full flex-col items-center justify-center"
+            >
+              {select === 0 ? (
+                <img src={IconActivePensionHome} alt="pension home" />
+              ) : (
+                <img src={IconPensionHome} alt="pension home" />
+              )}
+              <p className={`${getColor(0)} text-xs`}>펜션공구</p>
+            </a>
+            <a
+              href="/main/chat"
+              className="flex w-full flex-col items-center justify-center"
+            >
+              {select === 1 ? (
+                <img src={IconActiveChat} alt="pension chat" />
+              ) : (
+                <img src={IconChat} alt="pension chat" />
+              )}
+              <p className={`${getColor(1)} text-xs`}>채팅</p>
+            </a>
+            <a
+              href="/main/investGuide"
+              className="flex w-full flex-col items-center justify-center"
+            >
+              {select === 2 ? (
+                <img src={IconActiveInfo} alt="pension info" />
+              ) : (
+                <img src={IconInfo} alt="pension info" />
+              )}
+              <p className={`${getColor(2)} text-xs`}>투자가이드</p>
+            </a>
+            <a
+              href="/main/my"
+              className="flex w-full flex-col items-center justify-center"
+            >
+              {select === 3 ? (
+                <img src={IconActiveUser} alt="pension user" />
+              ) : (
+                <img src={IconUser} alt="pension user" />
+              )}
+              <p className={`${getColor(3)} text-xs`}>My</p>
+            </a>
+          </footer>
+        </div>
+      )}
     </div>
   );
 }
