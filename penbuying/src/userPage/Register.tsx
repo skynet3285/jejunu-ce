@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import executeQuery from '../module/sql';
 
 export interface User {
@@ -26,6 +27,8 @@ const insertUser = async (user: User): Promise<void> => {
 };
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState<User>({
     user_id: '',
     user_pw: '',
@@ -44,7 +47,23 @@ export default function Register() {
   };
 
   const handleSubmit = async () => {
-    await insertUser(user);
+    if (
+      user.user_id === '' ||
+      user.user_pw === '' ||
+      user.user_name === '' ||
+      user.user_phone_number === '' ||
+      user.user_email === ''
+    ) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+    try {
+      await insertUser(user);
+      alert('회원가입 성공');
+      navigate('/');
+    } catch {
+      alert('이미 존재하는 회원입니다.');
+    }
   };
 
   return (
