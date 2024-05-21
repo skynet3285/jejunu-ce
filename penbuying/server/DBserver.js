@@ -11,7 +11,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MySQL 데이터베이스 연결 설정
+// MySQL & MariaDB 연결
+// 보안을 위해 .env을 통한 환경변수 설정
 const db = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,

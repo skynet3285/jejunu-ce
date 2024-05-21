@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from './Register';
 import executeQuery from '../module/sql';
-import { useUser } from '../UserContext';
 
 interface UserLogin {
   user_id: string;
@@ -26,7 +25,6 @@ const loginUser = async (user: UserLogin): Promise<User | null> => {
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setUser } = useUser();
   const [userLogin, setUserLogin] = useState<UserLogin>({
     user_id: '',
     user_pw: '',
@@ -62,7 +60,6 @@ export default function Login() {
       const user = response as User;
       sessionStorage.setItem('userInfo', JSON.stringify(user));
       alert(`${user.user_name}님 안녕하세요.`);
-      setUser(user);
 
       navigate('/main/pensionMain');
       return;
