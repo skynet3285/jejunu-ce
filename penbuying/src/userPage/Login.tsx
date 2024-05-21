@@ -43,10 +43,16 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (userLogin.user_id === '' || userLogin.user_pw === '') {
+      alert('아이디와 비밀번호를 입력하세요');
+      return;
+    }
+
     const response = await loginUser(userLogin);
     if (response) {
-      alert('로그인 성공');
       const user = response as User;
+      alert(`${user.user_name}님 안녕하세요.`);
       setUser(user);
 
       navigate('/main/PensionMain');
