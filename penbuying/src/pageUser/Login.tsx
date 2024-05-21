@@ -16,9 +16,9 @@ const loginUser = async (user: UserLogin): Promise<User | null> => {
   `;
 
   const response = await executeQuery(query);
-  const userData: User[] = response.data; // Assuming response is an array of users
-  if (userData.length > 0) {
-    return userData[0];
+  const data = response.data as User[];
+  if (data.length > 0) {
+    return data[0];
   }
   return null;
 };

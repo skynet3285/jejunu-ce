@@ -1,7 +1,7 @@
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { User } from '../pageUser/Register';
 import PensionMain from './PensionMain';
+import My from './My';
 import IconPensionHome from '../asset/imgs/pensionMain.svg';
 import IconActivePensionHome from '../asset/imgs/pensionMainA.svg';
 import IconChat from '../asset/imgs/pensionChat.svg';
@@ -14,7 +14,6 @@ import IconActiveUser from '../asset/imgs/pensionUserA.svg';
 export default function Main() {
   const location = useLocation();
   const [select, setSelect] = useState<number>(0);
-  const [user, setUser] = useState<User>({ user_id: '', user_name: '' });
   const [isActive, setIsActive] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -22,8 +21,6 @@ export default function Main() {
     const data = sessionStorage.getItem('userInfo');
     if (data !== null) {
       setIsActive(true);
-      const userInfo = JSON.parse(data) as User;
-      setUser(userInfo);
     } else {
       navigate('/');
       alert(`로그인이 필요합니다.`);
@@ -60,29 +57,11 @@ export default function Main() {
           <Route path="/pensionMain" element={<PensionMain />} />
           <Route path="/chat" element={<PensionMain />} />
           <Route path="/investGuide" element={<PensionMain />} />
-          <Route path="/my" element={<PensionMain />} />
+          <Route path="/my" element={<My />} />
         </Routes>
       </div>
       {isActive && (
         <div className="flex flex-col">
-          <div className="flex w-full justify-center">
-            <div className="flex w-[21rem] space-x-1">
-              <p className="bg-cyan-100 p-2 text-center">
-                {user.user_id}({user.user_name})님 안녕하세요
-              </p>
-              <button
-                className="rounded bg-red-700 p-2 text-white"
-                type="button"
-                onClick={() => {
-                  sessionStorage.removeItem('userInfo');
-                  navigate('/');
-                  alert('로그아웃 되었습니다.');
-                }}
-              >
-                로그아웃
-              </button>
-            </div>
-          </div>
           <footer className="flex h-[6rem] w-full">
             <a
               href="/main/pensionMain"

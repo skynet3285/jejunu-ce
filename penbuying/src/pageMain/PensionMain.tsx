@@ -24,9 +24,9 @@ const loadPension = async (): Promise<Pension[] | null> => {
   `;
 
   const response = await executeQuery(query);
-  const pensionData: Pension[] = response.data; // Assuming response is an array of users
-  if (pensionData.length > 0) {
-    return pensionData;
+  const data = response.data as Pension[]; // Assuming response is an array of users
+  if (data.length > 0) {
+    return data;
   }
   return null;
 };
@@ -46,7 +46,7 @@ export default function PensionMain() {
 
   return (
     <div>
-      <div className="flex flex-col items-center py-20">
+      <div className="flex flex-col items-center py-10">
         {pensions &&
           pensions.map(pension => (
             <PensionInvestBox

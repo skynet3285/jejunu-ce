@@ -1,4 +1,4 @@
-export interface Props {
+interface Props {
   pensionImg: string;
   title: string;
   member: string;
@@ -32,7 +32,7 @@ export default function PensionInvestBox(props: Props) {
           투자하기
         </button>
       ) : (
-        <div className="mb-2 w-full rounded border-2 bg-gray-400 p-2 text-center text-sm text-white">
+        <div className="mb-2 w-full rounded border-2 border-gray-400 bg-gray-400 p-2 text-center text-sm text-white">
           투자마감
         </div>
       )}

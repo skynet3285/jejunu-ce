@@ -20,6 +20,7 @@ module.exports = {
   },
   root: true,
   rules: {
+    'no-unsafe-optional-chaining': 'off',
     'no-alert': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'react/jsx-uses-react': 'off',
