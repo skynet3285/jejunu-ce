@@ -28,21 +28,16 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    switch (location.pathname) {
-      case '/main/pensionMain':
-        setSelect(0);
-        break;
-      case '/main/chat':
-        setSelect(1);
-        break;
-      case '/main/investGuide':
-        setSelect(2);
-        break;
-      case '/main/my':
-        setSelect(3);
-        break;
-      default:
-        setSelect(0);
+    if (location.pathname.startsWith('/main/pensionMain')) {
+      setSelect(0);
+    } else if (location.pathname.startsWith('/main/chat')) {
+      setSelect(1);
+    } else if (location.pathname.startsWith('/main/investGuide')) {
+      setSelect(2);
+    } else if (location.pathname.startsWith('/main/my')) {
+      setSelect(3);
+    } else {
+      setSelect(0);
     }
   }, [location.pathname]);
 
@@ -52,7 +47,7 @@ export default function Main() {
 
   return (
     <div className="flex h-screen w-screen flex-col ">
-      <main className="h-[90%]">
+      <main className="h-[90vh] overflow-y-auto">
         {/* 라우팅되는 페이지가 삽입되는 자리입니다 */}
         <Routes>
           <Route path="/pensionMain/*" element={<PensionMain />} />
