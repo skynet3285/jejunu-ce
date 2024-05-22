@@ -56,52 +56,61 @@ export default function PensionInfo() {
 
   return (
     <article className="flex flex-col">
-      <div className="mt-10 flex justify-center">
-        <button
-          type="button"
-          onClick={() => {
-            navigate('..');
-          }}
-        >
-          <img src={leftArrow} alt="leftArrow" />
-        </button>
-        <p className="w-[87%] text-center text-lg font-bold">펜션 정보</p>
-      </div>
       {pension && (
-        <div className="mt-4 flex flex-col justify-center">
-          <div className="h-auto w-full justify-center">
-            <img className="w-full" src={pensionBackground} alt="background" />
+        <div>
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                navigate('..');
+              }}
+            >
+              <img src={leftArrow} alt="leftArrow" />
+            </button>
+            <p className="w-full text-center text-lg font-bold">펜션 정보</p>
+            <div className="w-[24px]" />
           </div>
-          <div className="mt-5 flex flex-col px-4">
-            <div className="font-bold">{pension?.article_title}</div>
-            <div className="text-sm">
-              공구 인원 {pension.number_of_participants}명 /{' '}
-              {pension.maximum_of_participants}명
+          <div className="mt-4 flex flex-col justify-center">
+            <div className="h-auto w-full justify-center">
+              <img
+                className="w-full"
+                src={pensionBackground}
+                alt="background"
+              />
             </div>
-            <div className="text-sm">
-              모집 금액 {pension.current_investment_amount / 100000000}억원 /{' '}
-              {pension.total_investment_amount / 100000000}억원
+            <div className="mt-5 flex flex-col px-4">
+              <div className="font-bold">{pension?.article_title}</div>
+              <div className="text-sm">
+                공구 인원 {pension.number_of_participants}명 /{' '}
+                {pension.maximum_of_participants}명
+              </div>
+              <div className="text-sm">
+                모집 금액 {pension.current_investment_amount / 100000000}억원 /{' '}
+                {pension.total_investment_amount / 100000000}억원
+              </div>
+              <div className="text-sm text-gray-500">
+                마감 날짜 {pension.deadline_date.split('T')[0]}
+              </div>
             </div>
-            <div className="text-sm text-gray-500">
-              마감 날짜 {pension.deadline_date.split('T')[0]}
+            <div className="mt-2 h-[0.05rem] w-full bg-gray-400" />
+            <div className="mt-4 px-4 font-bold">
+              {pension.article_contents}
             </div>
-          </div>
-          <div className="mt-2 h-[0.05rem] w-full bg-gray-400" />
-          <div className="mt-4 px-4 font-bold">{pension.article_contents}</div>
-          <div className="mx-4 mt-4 flex flex-col rounded-xl border border-gray-300 bg-gray-300 p-2">
-            <p className="my-2 text-sm">첨부파일</p>
-            <p className="my-1 flex text-sm">
-              <img src={hwpIcon} alt="hwp" />
-              부동산 공유지분 매매계약서.hwp
-            </p>
-            <p className="my-1 flex text-sm">
-              <img src={hwpIcon} alt="hwp" />
-              부동산 공유지분 위치확인동의서.hwp
-            </p>
-            <p className="my-1 flex text-sm">
-              <img src={hwpIcon} alt="hwp" />
-              지분 공유 펜션 이용약관.hwp
-            </p>
+            <div className="mx-4 mt-4 flex flex-col rounded-xl border border-gray-300 bg-gray-300 p-2">
+              <p className="my-2 text-sm">첨부파일</p>
+              <p className="my-1 flex text-sm">
+                <img src={hwpIcon} alt="hwp" />
+                부동산 공유지분 매매계약서.hwp
+              </p>
+              <p className="my-1 flex text-sm">
+                <img src={hwpIcon} alt="hwp" />
+                부동산 공유지분 위치확인동의서.hwp
+              </p>
+              <p className="my-1 flex text-sm">
+                <img src={hwpIcon} alt="hwp" />
+                지분 공유 펜션 이용약관.hwp
+              </p>
+            </div>
           </div>
         </div>
       )}

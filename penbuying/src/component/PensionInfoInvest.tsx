@@ -93,7 +93,7 @@ export default function PensionInfoInvest() {
             </p>
             <div className="w-[24px]" />
           </div>
-          <div className="flex h-full flex-col justify-between">
+          <div className="flex h-auto flex-col justify-between">
             <div className="mt-4 flex h-auto w-full flex-col justify-center">
               <div className="h-auto w-full justify-center">
                 <img
@@ -153,7 +153,7 @@ export default function PensionInfoInvest() {
           </div>
           <button
             type="button"
-            className="m-4 h-[4rem] border bg-violet-700 text-lg text-white"
+            className="m-4 h-[4rem] rounded bg-violet-700 text-lg text-white"
             onClick={handleSubmit}
           >
             투자요청
