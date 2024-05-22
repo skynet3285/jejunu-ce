@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import My from '../component/My';
+import My from './My';
 import PensionInfo from '../component/PensionInfo';
 
 export default function MyMain() {
