@@ -13,6 +13,24 @@ CREATE TABLE `user` (
 );
 
 
+################ Dummy insert
+INSERT INTO `user` (
+    `user_id`,
+    `user_pw`,
+    `user_access`,
+    `user_name`,
+    `user_phone_number`,
+    `user_email`
+) VALUES (
+    '1234',  -- user_id
+    '1234',  -- user_pw
+    0,  -- user_access
+    '홍길동',  -- user_name
+    '010-1234-5678',      -- article_active
+    'redRoad@example.com' -- user_email
+);
+
+
 
 CREATE TABLE `user_oauth` (
     `oauth_no` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -32,15 +50,7 @@ CREATE TABLE `profile` (
     FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
-CREATE TABLE `own` (
-    `own_no` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user_id` VARCHAR(255) NOT NULL,
-    `pension_id` INT UNSIGNED NOT NULL,
-    `own_percent` DOUBLE NULL,
-    `investment_amount` INT UNSIGNED NULL,
-    PRIMARY KEY (`own_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-);
+
 
 CREATE TABLE `share_pension` (
     `article_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -77,7 +87,7 @@ INSERT INTO `share_pension` (
     '[제주] 서귀포 대정 자연 펜션',  -- article_title
     '서귀포에 위치한 아름다운 펜션입니다.',  -- article_contents
     '../imgs/pension1.png',  -- pension_img
-    false,  -- article_active
+    true,  -- article_active
     500000000, -- current_investment_amount
     600000000,  -- total_investment_amount
     50000000,  -- minimum_investment_amount
@@ -139,6 +149,33 @@ INSERT INTO `share_pension` (
     3,  -- number_of_participants
     5,  -- maximum_of_participants
     '2024-12-31'  -- deadline_date
+);
+
+
+CREATE TABLE `own` (
+    `own_no` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` VARCHAR(255) NOT NULL,
+    `pension_id` INT UNSIGNED NOT NULL,
+    `own_percent` DOUBLE NULL,
+    `investment_amount` INT UNSIGNED NULL,
+    PRIMARY KEY (`own_no`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+);
+
+
+################ Dummy insert
+INSERT INTO `own` (
+    `own_no`,
+    `user_id`,
+    `pension_id`,
+    `own_percent`,
+    `investment_amount`
+) VALUES (
+    1,       -- own_no
+    '1234',  -- user_id
+    1,       -- pension_id
+    25,      -- own_percent
+    200000000 -- investment_amount
 );
 
 

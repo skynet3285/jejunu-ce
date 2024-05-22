@@ -35,12 +35,18 @@ const StyledCalendar = styled(Calendar)`
   }
 `;
 
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+type NullableDate = Date | null;
+
+interface PeriodType {
+  start: NullableDate;
+  end : NullableDate;
+}
 
 export default function PensionOwnReservation() {
-  const [value, onChange] = useState<Value>([null, null]);
-  const [selectedDays, setSelectedDays] = useState<number | null>(null);
+  const [period, setPeriod] = useState<PeriodType>({start: null, end : null});
+  const [value, setValue] = useState<NullableDate | [NullableDate, NullableDate]>([null, null]);
+  const [selectedDays, setSelectedDays] = useState<number>(0);
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   const isToday = (date: Date) => {
     const today = new Date();
@@ -53,7 +59,7 @@ export default function PensionOwnReservation() {
 
   const tileClassName = ({ date, view }: { date: Date; view: string }) => {
     if (view === 'month') {
-      const [start, end] = value as [Date | null, Date | null];
+      const { start, end } = period;
       if (start && end && date >= start && date <= end) {
         return 'react-calendar__tile--highlight';
       }
@@ -65,33 +71,72 @@ export default function PensionOwnReservation() {
   };
 
   useEffect(() => {
-    if (value) {
-      const [start, end] = value as [Date | null, Date | null];
+    if(value) {
+      if (Array.isArray(value)) {
+        setPeriod({start: value[0], end: value[1]});
+      } else {
+        setPeriod({start: value, end: value});
+      }
+    }
+  }, [value]);
+
+  useEffect(() => {
+      const {start, end} = period;
       if (!start || !end) {
         return;
       }
       const diffInTime = Math.abs(end.getTime() - start.getTime());
       const diffInDays = Math.ceil(diffInTime / (1000 * 60 * 60 * 24));
       setSelectedDays(diffInDays);
-    } else {
-      setSelectedDays(null);
-    }
-  }, [value]);
+    
+  }, [period]);
 
   return (
     <div className="flex flex-col">
       <StyledCalendarWrapper>
         <StyledCalendar
           selectRange
-          onChange={onChange}
+          onChange={(v) => {
+            if (isActive === false) {
+              setValue(v);
+            }
+          }}
           value={value}
           tileClassName={tileClassName}
           calendarType="gregory"
         />
       </StyledCalendarWrapper>
-      <button type="button" className="mt-4 h-8 rounded bg-red-600 text-white">
-        펜션 사용권{selectedDays !== null ? selectedDays : '0'}장으로 예약하기
-      </button>
+      {isActive === false ? (
+      <button
+        onClick={() => {
+          if(selectedDays === 0) {
+            alert('예약일을 선택하세요');
+          }
+          else {
+            setIsActive(true);
+          }
+        }}
+        className="mt-4 h-8 rounded bg-red-600 text-white"
+        type="button" >
+        펜션 사용권 {selectedDays > 0 ? `${selectedDays}장으로` : ''} 예약하기
+      </button>) : (
+      <>
+        <button
+          className="mt-4 h-8 rounded bg-gray-400 text-white text-center items-center"
+          type="button">
+          펜션 예약완료
+        </button>
+        <div className="flex flex-col text-purple-700 text-center my-4">
+          <p>
+            {period.start?.toLocaleDateString()} ~ {period.end?.toLocaleDateString()} ({selectedDays}일)
+          </p>
+          <p>
+            펜션 이용 예약되었습니다
+          </p>
+        </div>
+      </>
+      )
+      }
     </div>
   );
 }
