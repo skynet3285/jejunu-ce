@@ -5,7 +5,7 @@ import Main from './pageMain/Main';
 
 function App() {
   return (
-    <div className="App w-screen">
+    <main className="App w-screen">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -13,7 +13,7 @@ function App() {
           <Route path="/main/*" element={<Main />} />
         </Routes>
       </BrowserRouter>
-    </div>
+    </main>
   );
 }
 

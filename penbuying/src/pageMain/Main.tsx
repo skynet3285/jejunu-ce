@@ -1,7 +1,7 @@
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import PensionMain from './PensionMain';
-import My from './My';
+import MyMain from './MyMain';
 import IconPensionHome from '../asset/imgs/pensionMain.svg';
 import IconActivePensionHome from '../asset/imgs/pensionMainA.svg';
 import IconChat from '../asset/imgs/pensionChat.svg';
@@ -52,17 +52,18 @@ export default function Main() {
 
   return (
     <div className="flex h-screen w-screen flex-col ">
-      <div className="h-full">
+      <main className="h-[90%]">
+        {/* 라우팅되는 페이지가 삽입되는 자리입니다 */}
         <Routes>
-          <Route path="/pensionMain" element={<PensionMain />} />
-          <Route path="/chat" element={<PensionMain />} />
-          <Route path="/investGuide" element={<PensionMain />} />
-          <Route path="/my" element={<My />} />
+          <Route path="/pensionMain/*" element={<PensionMain />} />
+          <Route path="/chat/*" element={<PensionMain />} />
+          <Route path="/investGuide/*" element={<PensionMain />} />
+          <Route path="/my/*" element={<MyMain />} />
         </Routes>
-      </div>
+      </main>
       {isActive && (
-        <div className="flex flex-col">
-          <footer className="flex h-[6rem] w-full">
+        <footer className="flex flex-col">
+          <div className="flex h-[6rem] w-full">
             <a
               href="/main/pensionMain"
               className="flex w-full flex-col items-center justify-center"
@@ -107,8 +108,8 @@ export default function Main() {
               )}
               <p className={`${getColor(3)} text-xs`}>My</p>
             </a>
-          </footer>
-        </div>
+          </div>
+        </footer>
       )}
     </div>
   );

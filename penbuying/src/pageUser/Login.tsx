@@ -68,7 +68,7 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <article className="flex flex-col">
       <div className="mb-10 mt-40 flex flex-col justify-center">
         <p className="text-bold text-center text-2xl font-bold	">
           펜션 그룹 투자
@@ -117,6 +117,6 @@ export default function Login() {
           회원가입
         </a>
       </div>
-    </div>
+    </article>
   );
 }

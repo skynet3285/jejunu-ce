@@ -148,7 +148,7 @@ INSERT INTO `share_pension` (
     50000000,  -- minimum_investment_amount
     3,  -- number_of_participants
     5,  -- maximum_of_participants
-    '2024-12-31'  -- deadline_date
+    '2024-05-22'  -- deadline_date
 );
 
 
@@ -173,7 +173,7 @@ INSERT INTO `own` (
 ) VALUES (
     1,       -- own_no
     '1234',  -- user_id
-    1,       -- pension_id
+    3,       -- pension_id
     25,      -- own_percent
     200000000 -- investment_amount
 );

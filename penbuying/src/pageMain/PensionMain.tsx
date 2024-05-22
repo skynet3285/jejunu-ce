@@ -45,20 +45,18 @@ export default function PensionMain() {
   }, []);
 
   return (
-    <div>
-      <div className="flex flex-col items-center py-10">
-        {pensions &&
-          pensions.map(pension => (
-            <PensionInvestBox
-              key={pension.article_id}
-              pensionImg={pension.pension_img}
-              title={pension.article_title}
-              member={`${pension.number_of_participants}명 / ${pension.maximum_of_participants}명`}
-              price={`${pension.current_investment_amount / 100000000}억원 / ${pension.total_investment_amount / 100000000}억원`}
-              status={pension.article_active ? '모집중' : '모집마감'}
-            />
-          ))}
-      </div>
-    </div>
+    <article className="flex flex-col items-center py-10">
+      {pensions &&
+        pensions.map(pension => (
+          <PensionInvestBox
+            key={pension.article_id}
+            pensionImg={pension.pension_img}
+            title={pension.article_title}
+            member={`${pension.number_of_participants}명 / ${pension.maximum_of_participants}명`}
+            price={`${pension.current_investment_amount / 100000000}억원 / ${pension.total_investment_amount / 100000000}억원`}
+            status={pension.article_active ? '모집중' : '모집마감'}
+          />
+        ))}
+    </article>
   );
 }
