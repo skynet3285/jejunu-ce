@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import My from './My';
+import My from '../pageMain/My';
 import PensionInfo from '../component/PensionInfo';
 
 export default function MyMain() {
@@ -7,7 +7,7 @@ export default function MyMain() {
     <article className="flex flex-col">
       <Routes>
         <Route path="/" element={<My />} />
-        <Route path="/pensionInfo/:pensionId" element={<PensionInfo />} />
+        <Route path="/info/:pensionId" element={<PensionInfo />} />
       </Routes>
     </article>
   );

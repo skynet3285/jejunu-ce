@@ -147,7 +147,7 @@ export default function PensionOwnBox(props: Props) {
               type="button"
               onClick={() => {
                 handleSelect34(3);
-                navigate(`pensionInfo/${pensionId}`);
+                navigate(`info/${pensionId}`);
               }}
             >
               펜션정보

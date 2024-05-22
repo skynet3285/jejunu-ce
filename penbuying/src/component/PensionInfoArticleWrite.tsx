@@ -8,7 +8,7 @@ import crossIcon from '../asset/imgs/cross.svg';
 import hwpIcon from '../asset/imgs/hwpIcon.png';
 
 interface Pension {
-  pension_id: number;
+  pension_id: string | undefined;
   article_title: string;
   article_contents: string;
   pension_img: string;
@@ -54,8 +54,11 @@ const insertArticle = async (data: Pension): Promise<void> => {
 };
 
 export default function PensionInfoArticleWrite() {
+  const { pensionId } = useParams();
+  const navigate = useNavigate();
+
   const [pension, setPension] = useState<Pension>({
-    pension_id: 0,
+    pension_id: pensionId,
     article_title: '',
     article_contents: '',
     pension_img: '../imgs/pension1.png',
@@ -68,22 +71,10 @@ export default function PensionInfoArticleWrite() {
     deadline_date: '',
   });
 
-  const { pensionId } = useParams();
-  const navigate = useNavigate();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fetchPension = async () => {
     await insertArticle(pension);
   };
 
-  const setPensionId = (newPensionId: number) => {
-    setPension(prevPension => ({
-      ...prevPension,
-      pension_id: newPensionId,
-    }));
-  };
-
-  // 만원 단위 변환
   const changeUnit = () => {
     setPension(prevPension => ({
       ...prevPension,
@@ -119,6 +110,11 @@ export default function PensionInfoArticleWrite() {
   };
 
   const handleSubmit = async () => {
+    if (!pensionId) {
+      alert('잘못된 접근입니다.');
+      return;
+    }
+
     if (
       pension.article_title === '' ||
       pension.article_contents === '' ||
@@ -130,12 +126,7 @@ export default function PensionInfoArticleWrite() {
       alert('모든 항목을 입력해주세요.');
       return;
     }
-    if (!pensionId) {
-      alert('잘못된 접근입니다.');
-      return;
-    }
 
-    setPensionId(Number(pensionId));
     changeUnit();
 
     console.log(pension);

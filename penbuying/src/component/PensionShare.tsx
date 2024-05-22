@@ -56,7 +56,7 @@ export default function PensionShare() {
   }, [pensions]);
 
   const handleClick = () => {
-    navigate(`pensionInvest/write/${pensionMaxId + 1}`);
+    navigate(`invest/write/${pensionMaxId + 1}`);
   };
 
   return (

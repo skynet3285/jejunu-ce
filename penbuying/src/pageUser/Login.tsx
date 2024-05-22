@@ -34,7 +34,7 @@ export default function Login() {
     const data = sessionStorage.getItem('userInfo');
     if (data !== null) {
       const userInfo = JSON.parse(data) as User;
-      navigate('/main/pensionMain');
+      navigate('/main/penbuying');
       alert(`${userInfo.user_name}님 안녕하세요.`);
     }
   }, []);
@@ -61,7 +61,7 @@ export default function Login() {
       sessionStorage.setItem('userInfo', JSON.stringify(user));
       alert(`${user.user_name}님 안녕하세요.`);
 
-      navigate('/main/pensionMain');
+      navigate('/main/penbuying');
       return;
     }
     alert('아이디 패스워드를 확인하세요');

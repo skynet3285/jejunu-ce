@@ -33,7 +33,7 @@ export default function PensionInvestBox(props: Props) {
           className="mb-2 w-full rounded border-2 border-black bg-violet-950 p-2 text-sm text-white"
           type="button"
           onClick={() => {
-            navigate(`pensionInvest/${pensionId}`);
+            navigate(`invest/${pensionId}`);
             console.log('투자하기');
           }}
         >

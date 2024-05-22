@@ -1,6 +1,7 @@
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import PensionMain from './PensionMain';
+import PensionArticle from './PensionArticle';
+import InvestGuideMain from './InvestGuideMain';
 import MyMain from './MyMain';
 import IconPensionHome from '../asset/imgs/pensionMain.svg';
 import IconActivePensionHome from '../asset/imgs/pensionMainA.svg';
@@ -11,7 +12,7 @@ import IconActiveInfo from '../asset/imgs/pensionInvestInfoA.svg';
 import IconUser from '../asset/imgs/pensionUser.svg';
 import IconActiveUser from '../asset/imgs/pensionUserA.svg';
 
-export default function Main() {
+export default function PenbuyingHome() {
   const location = useLocation();
   const [select, setSelect] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -28,7 +29,7 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    if (location.pathname.startsWith('/main/pensionMain')) {
+    if (location.pathname.startsWith('/main/penbuying')) {
       setSelect(0);
     } else if (location.pathname.startsWith('/main/chat')) {
       setSelect(1);
@@ -50,9 +51,9 @@ export default function Main() {
       <main className="h-[90vh] overflow-y-auto">
         {/* 라우팅되는 페이지가 삽입되는 자리입니다 */}
         <Routes>
-          <Route path="/pensionMain/*" element={<PensionMain />} />
-          <Route path="/chat/*" element={<PensionMain />} />
-          <Route path="/investGuide/*" element={<PensionMain />} />
+          <Route path="/penbuying/*" element={<PensionArticle />} />
+          <Route path="/chat/*" element={<PensionArticle />} />
+          <Route path="/investGuide/*" element={<InvestGuideMain />} />
           <Route path="/my/*" element={<MyMain />} />
         </Routes>
       </main>
@@ -60,7 +61,7 @@ export default function Main() {
         <footer className="flex flex-col">
           <div className="flex h-[6rem] w-full">
             <a
-              href="/main/pensionMain"
+              href="/main/penbuying"
               className="flex w-full flex-col items-center justify-center"
             >
               {select === 0 ? (
