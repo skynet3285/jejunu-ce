@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom';
+
 interface Props {
+  pensionId: number;
   pensionImg: string;
   title: string;
   member: string;
@@ -7,7 +10,8 @@ interface Props {
 }
 
 export default function PensionInvestBox(props: Props) {
-  const { pensionImg, title, member, price, status } = props;
+  const { pensionId, pensionImg, title, member, price, status } = props;
+  const navigate = useNavigate();
 
   return (
     <div className="h-auto w-auto rounded px-4 py-2 shadow-xl">
@@ -28,6 +32,10 @@ export default function PensionInvestBox(props: Props) {
         <button
           className="mb-2 w-full rounded border-2 border-black bg-violet-950 p-2 text-sm text-white"
           type="button"
+          onClick={() => {
+            navigate(`pensionInvest/${pensionId}`);
+            console.log('투자하기');
+          }}
         >
           투자하기
         </button>
