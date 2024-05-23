@@ -33,7 +33,7 @@ export default function PenbuyingHome() {
       setSelect(0);
     } else if (location.pathname.startsWith('/main/chat')) {
       setSelect(1);
-    } else if (location.pathname.startsWith('/main/investGuide')) {
+    } else if (location.pathname.startsWith('/main/guide')) {
       setSelect(2);
     } else if (location.pathname.startsWith('/main/my')) {
       setSelect(3);
@@ -47,13 +47,13 @@ export default function PenbuyingHome() {
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col ">
+    <main className="min-w-mobile flex h-screen w-screen flex-col">
       <main className="h-[90vh] overflow-y-auto">
         {/* 라우팅되는 페이지가 삽입되는 자리입니다 */}
         <Routes>
           <Route path="/penbuying/*" element={<PensionArticle />} />
           <Route path="/chat/*" element={<PensionArticle />} />
-          <Route path="/investGuide/*" element={<InvestGuideMain />} />
+          <Route path="/guide/*" element={<InvestGuideMain />} />
           <Route path="/my/*" element={<MyMain />} />
         </Routes>
       </main>
@@ -83,7 +83,7 @@ export default function PenbuyingHome() {
               <p className={`${getColor(1)} text-xs`}>채팅</p>
             </a>
             <a
-              href="/main/investGuide"
+              href="/main/guide"
               className="flex w-full flex-col items-center justify-center"
             >
               {select === 2 ? (
@@ -107,6 +107,6 @@ export default function PenbuyingHome() {
           </div>
         </footer>
       )}
-    </div>
+    </main>
   );
 }

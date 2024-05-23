@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import executeQuery from '../module/sql';
-import PensionInvestBox from './PensionInvestBox';
+import PensionInvestBox from '../component/PensionInvestBox';
 import plusIcon from '../asset/imgs/plus.svg';
 
 interface Pension {

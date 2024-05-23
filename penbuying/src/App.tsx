@@ -5,7 +5,7 @@ import PenbuyingHome from './layout/PenbuyingHome';
 
 function App() {
   return (
-    <main className="App w-screen">
+    <main className="App min-w-mobile w-screen">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />

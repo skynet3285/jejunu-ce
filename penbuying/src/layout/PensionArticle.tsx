@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import PensionShare from '../component/PensionShare';
-import PensionInfoInvest from '../component/PensionInfoInvest';
-import PensionInfoArticleWrite from '../component/PensionInfoArticleWrite';
+import PensionShare from '../pageMain/PensionShare';
+import PensionInfoInvest from '../pageMain/PensionInfoInvest';
+import PensionInfoArticleWrite from '../pageMain/PensionInfoArticleWrite';
 
 export default function PensionArticle() {
   return (

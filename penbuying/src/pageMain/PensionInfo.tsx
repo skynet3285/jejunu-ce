@@ -96,8 +96,8 @@ export default function PensionInfo() {
             <div className="mt-4 px-4 font-bold">
               {pension.article_contents}
             </div>
-            <div className="mx-4 mt-4 flex flex-col rounded-xl border border-gray-300 bg-gray-300 p-2">
-              <p className="my-2 text-sm">첨부파일</p>
+            <div className="m-4 flex flex-col rounded-xl border border-gray-300 bg-gray-300 p-2">
+              <p className="text-sm">첨부파일</p>
               <p className="my-1 flex text-sm">
                 <img src={hwpIcon} alt="hwp" />
                 부동산 공유지분 매매계약서.hwp
