@@ -128,9 +128,6 @@ export default function PensionInfoArticleWrite() {
     }
 
     changeUnit();
-
-    console.log(pension);
-
     await fetchPension();
 
     alert('게시글 작성 완료');

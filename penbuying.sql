@@ -1,3 +1,5 @@
+drop schema penbuying;
+
 CREATE SCHEMA `penbuying` DEFAULT CHARACTER SET utf8 ;
 
 use penbuying;
@@ -11,26 +13,6 @@ CREATE TABLE `user` (
     `user_email` VARCHAR(255) NULL,
     PRIMARY KEY (`user_id`)
 );
-
-
-################ Dummy insert
-INSERT INTO `user` (
-    `user_id`,
-    `user_pw`,
-    `user_access`,
-    `user_name`,
-    `user_phone_number`,
-    `user_email`
-) VALUES (
-    '1234',  -- user_id
-    '1234',  -- user_pw
-    0,  -- user_access
-    '홍길동',  -- user_name
-    '010-1234-5678',      -- article_active
-    'redRoad@example.com' -- user_email
-);
-
-
 
 CREATE TABLE `user_oauth` (
     `oauth_no` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -50,8 +32,6 @@ CREATE TABLE `profile` (
     FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
-
-
 CREATE TABLE `share_pension` (
     `article_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `pension_id` INT UNSIGNED NOT NULL,
@@ -68,90 +48,6 @@ CREATE TABLE `share_pension` (
     PRIMARY KEY (`article_id`)
 );
 
-
-################ Dummy insert
-INSERT INTO `share_pension` (
-    `pension_id`,
-    `article_title`,
-    `article_contents`,
-    `pension_img`,
-    `article_active`,
-    `current_investment_amount`,
-    `total_investment_amount`,
-    `minimum_investment_amount`,
-    `number_of_participants`,
-    `maximum_of_participants`,
-    `deadline_date`
-) VALUES (
-    1,  -- pension_id
-    '[제주] 서귀포 대정 자연 펜션',  -- article_title
-    '서귀포에 위치한 아름다운 펜션입니다.',  -- article_contents
-    '../imgs/pension1.png',  -- pension_img
-    true,  -- article_active
-    500000000, -- current_investment_amount
-    600000000,  -- total_investment_amount
-    50000000,  -- minimum_investment_amount
-    8,  -- number_of_participants
-    10,  -- maximum_of_participants
-    '2024-12-31'  -- deadline_date
-);
-
-
-INSERT INTO `share_pension` (
-    `pension_id`,
-    `article_title`,
-    `article_contents`,
-    `pension_img`,
-    `article_active`,
-    `current_investment_amount`,
-    `total_investment_amount`,
-    `minimum_investment_amount`,
-    `number_of_participants`,
-    `maximum_of_participants`,
-    `deadline_date`
-) VALUES (
-    2,  -- pension_id
-    '[제주] 서귀포 펜션 102호',  -- article_title
-    '서귀포에 위치한 아름다운 펜션입니다.',  -- article_contents
-    '../imgs/pension2.png',  -- pension_img
-    true,  -- article_active
-    600000000, -- current_investment_amount
-    800000000,  -- total_investment_amount
-    50000000,  -- minimum_investment_amount
-    3,  -- number_of_participants
-    5,  -- maximum_of_participants
-    '2024-12-31'  -- deadline_date
-);
-
-
-
-INSERT INTO `share_pension` (
-    `pension_id`,
-    `article_title`,
-    `article_contents`,
-    `pension_img`,
-    `article_active`,
-    `current_investment_amount`,
-    `total_investment_amount`,
-    `minimum_investment_amount`,
-    `number_of_participants`,
-    `maximum_of_participants`,
-    `deadline_date`
-) VALUES (
-    3,  -- pension_id
-    '[제주] 서귀포 펜션 101호',  -- article_title
-    '서귀포에 위치한 아름다운 펜션입니다.',  -- article_contents
-    '../imgs/pension2.png',  -- pension_img
-    false,  -- article_active
-    800000000, -- current_investment_amount
-    800000000,  -- total_investment_amount
-    50000000,  -- minimum_investment_amount
-    3,  -- number_of_participants
-    5,  -- maximum_of_participants
-    '2024-05-22'  -- deadline_date
-);
-
-
 CREATE TABLE `own` (
     `own_no` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `user_id` VARCHAR(255) NOT NULL,
@@ -162,29 +58,12 @@ CREATE TABLE `own` (
     FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
-
-################ Dummy insert
-INSERT INTO `own` (
-    `own_no`,
-    `user_id`,
-    `pension_id`,
-    `own_percent`,
-    `investment_amount`
-) VALUES (
-    1,       -- own_no
-    '1234',  -- user_id
-    3,       -- pension_id
-    25,      -- own_percent
-    200000000 -- investment_amount
-);
-
-
 CREATE TABLE `chat` (
     `chat_no` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `chat_id` INT UNSIGNED NOT NULL,
     `user_id` VARCHAR(255) NOT NULL,
     `chat_contents` TEXT NULL,
-    `chat_date` DATE NULL,
+    `chat_date` DATETIME NULL,
     PRIMARY KEY (`chat_no`)
 );
 
@@ -198,7 +77,7 @@ CREATE TABLE `chat_room` (
 CREATE TABLE `chat_participants` (
     `chat_id` INT UNSIGNED NOT NULL,
     `user_id` VARCHAR(255) NOT NULL,
-    `participant_date` DATE NULL,
+    `participant_date` DATETIME NULL,
     PRIMARY KEY (`chat_id`, `user_id`),
     FOREIGN KEY (`chat_id`) REFERENCES `chat_room` (`chat_id`),
     FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
@@ -246,3 +125,134 @@ CREATE TABLE `agenda_vote` (
 
 
 
+
+################ Dummy insert
+INSERT INTO `user` (
+    `user_id`,
+    `user_pw`,
+    `user_access`,
+    `user_name`,
+    `user_phone_number`,
+    `user_email`
+) VALUES (
+    '1234',  -- user_id
+    '1234',  -- user_pw
+    0,  -- user_access
+    '홍길동',  -- user_name
+    '010-1234-5678',      -- article_active
+    'redRoad@example.com' -- user_email
+);
+
+INSERT INTO `user` (
+    `user_id`,
+    `user_pw`,
+    `user_access`,
+    `user_name`,
+    `user_phone_number`,
+    `user_email`
+) VALUES (
+    '12345',  -- user_id
+    '12345',  -- user_pw
+    0,  -- user_access
+    '김철수',  -- user_name
+    '010-1234-5678',      -- article_active
+    'kimcs@example.com' -- user_email
+);
+
+INSERT INTO `share_pension` (
+    `pension_id`,
+    `article_title`,
+    `article_contents`,
+    `pension_img`,
+    `article_active`,
+    `current_investment_amount`,
+    `total_investment_amount`,
+    `minimum_investment_amount`,
+    `number_of_participants`,
+    `maximum_of_participants`,
+    `deadline_date`
+) VALUES (
+    1,  -- pension_id
+    '[제주] 서귀포 대정 자연 펜션',  -- article_title
+    '서귀포에 위치한 아름다운 펜션입니다.',  -- article_contents
+    '../imgs/pension1.png',  -- pension_img
+    true,  -- article_active
+    500000000, -- current_investment_amount
+    600000000,  -- total_investment_amount
+    50000000,  -- minimum_investment_amount
+    8,  -- number_of_participants
+    10,  -- maximum_of_participants
+    '2024-12-31'  -- deadline_date
+);
+
+INSERT INTO `share_pension` (
+    `pension_id`,
+    `article_title`,
+    `article_contents`,
+    `pension_img`,
+    `article_active`,
+    `current_investment_amount`,
+    `total_investment_amount`,
+    `minimum_investment_amount`,
+    `number_of_participants`,
+    `maximum_of_participants`,
+    `deadline_date`
+) VALUES (
+    2,  -- pension_id
+    '[제주] 서귀포 펜션 102호',  -- article_title
+    '서귀포에 위치한 아름다운 펜션입니다.',  -- article_contents
+    '../imgs/pension2.png',  -- pension_img
+    true,  -- article_active
+    600000000, -- current_investment_amount
+    800000000,  -- total_investment_amount
+    50000000,  -- minimum_investment_amount
+    3,  -- number_of_participants
+    5,  -- maximum_of_participants
+    '2024-12-31'  -- deadline_date
+);
+INSERT INTO `share_pension` (
+    `pension_id`,
+    `article_title`,
+    `article_contents`,
+    `pension_img`,
+    `article_active`,
+    `current_investment_amount`,
+    `total_investment_amount`,
+    `minimum_investment_amount`,
+    `number_of_participants`,
+    `maximum_of_participants`,
+    `deadline_date`
+) VALUES (
+    3,  -- pension_id
+    '[제주] 서귀포 펜션 101호',  -- article_title
+    '서귀포에 위치한 아름다운 펜션입니다.',  -- article_contents
+    '../imgs/pension2.png',  -- pension_img
+    false,  -- article_active
+    800000000, -- current_investment_amount
+    800000000,  -- total_investment_amount
+    50000000,  -- minimum_investment_amount
+    4,  -- number_of_participants
+    5,  -- maximum_of_participants
+    '2024-05-22'  -- deadline_date
+);
+
+################ Dummy insert
+INSERT INTO chat_room (chat_title, chat_number_of_participants) 
+VALUES ('[제주] 서귀포 토평 펜션 101호', 2);
+
+SET @chat_id = LAST_INSERT_ID();
+
+INSERT INTO chat_participants (chat_id, user_id, participant_date) 
+VALUES 
+(@chat_id, '12345', now()), 
+(@chat_id, '1234', now());
+
+INSERT INTO chat (chat_id, user_id, chat_contents, chat_date) 
+VALUES 
+(@chat_id, '1234', '문의 사항이 있어 연락드립니다', now()), 
+(@chat_id, '12345', '네, 무슨일이죠?', now());
+
+####### Chat init
+DELETE FROM chat WHERE chat_no >= 3;
+ALTER TABLE chat AUTO_INCREMENT = 3;
+select * from chat;

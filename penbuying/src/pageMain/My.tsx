@@ -1,9 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { User } from '../pageUser/Register';
 import userProfile from '../asset/imgs/userDefaultProfile.png';
 import PensionOwnBox from '../component/PensionOwnBox';
 import executeQuery from '../module/sql';
+
+interface User {
+  user_id: string;
+  user_pw?: string;
+  user_access?: number;
+  user_name?: string;
+  user_phone_number?: string;
+  user_email?: string;
+}
 
 interface OwnPension {
   user_id: string;

@@ -34,7 +34,6 @@ export default function PensionInvestBox(props: Props) {
           type="button"
           onClick={() => {
             navigate(`invest/${pensionId}`);
-            console.log('투자하기');
           }}
         >
           투자하기

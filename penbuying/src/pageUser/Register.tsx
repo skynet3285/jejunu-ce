@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import executeQuery from '../module/sql';
 
-export interface User {
+interface User {
   user_id: string;
   user_pw?: string;
   user_access?: number;

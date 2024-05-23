@@ -1,6 +1,7 @@
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import PensionArticle from './PensionArticle';
+import PenbuyingChatMain from './PenbuyingChatMain';
 import InvestGuideMain from './InvestGuideMain';
 import MyMain from './MyMain';
 import IconPensionHome from '../asset/imgs/pensionMain.svg';
@@ -52,7 +53,7 @@ export default function PenbuyingHome() {
         {/* 라우팅되는 페이지가 삽입되는 자리입니다 */}
         <Routes>
           <Route path="/penbuying/*" element={<PensionArticle />} />
-          <Route path="/chat/*" element={<PensionArticle />} />
+          <Route path="/chat/*" element={<PenbuyingChatMain />} />
           <Route path="/guide/*" element={<InvestGuideMain />} />
           <Route path="/my/*" element={<MyMain />} />
         </Routes>
