@@ -228,17 +228,22 @@ export default function ChatMain() {
     adjustTextareaHeight();
   };
 
+  const sanitizeInput = (input: string): string =>
+    // 이 정규식은 입력값에서 특정 특수문자를 제거합니다.
+    input.replace(/['"\\`#;]/g, '');
+
   const handleSendMessage = () => {
-    if (message.trim() === '') {
+    const msg = sanitizeInput(message);
+
+    if (msg.trim() === '') {
       return; // 메시지가 빈 문자열이거나 공백만 포함된 경우 전송하지 않음
     }
     sendChat({
       chat_id: Number(chatId),
       user_id: user?.user_id as string,
-      chat_contents: message,
+      chat_contents: msg,
     });
     setMessage('');
-    adjustTextareaHeight();
   };
 
   const handleKeyDown = (e: {

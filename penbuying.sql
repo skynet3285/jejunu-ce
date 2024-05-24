@@ -236,6 +236,20 @@ INSERT INTO `share_pension` (
     '2024-05-22'  -- deadline_date
 );
 
+INSERT INTO `own` (
+    `user_id`,
+    `pension_id`,
+    `own_percent`,
+    `investment_amount`
+) VALUES (
+    '1234',  -- user_id
+    3,       -- pension_id
+    25,      -- own_percent
+    200000000 -- investment_amount
+);
+
+
+
 ################ Dummy insert
 INSERT INTO chat_room (chat_title, chat_number_of_participants) 
 VALUES ('[제주] 서귀포 토평 펜션 101호', 2);
