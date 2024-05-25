@@ -38,11 +38,15 @@ export default function Register() {
     user_email: '',
   });
 
+  const sanitizeInput = (input: string): string =>
+    // 이 정규식은 입력값에서 특정 특수문자를 제거합니다.
+    input.replace(/['"\\`#;]/g, '');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUser(prevUser => ({
       ...prevUser,
-      [name]: value,
+      [name]: sanitizeInput(value),
     }));
   };
 

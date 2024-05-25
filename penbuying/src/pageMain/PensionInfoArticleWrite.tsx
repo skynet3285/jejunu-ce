@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
 import executeQuery from '../module/sql';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 import cameraIcon from '../asset/imgs/camera.svg';
@@ -42,8 +42,8 @@ const insertArticle = async (data: Pension): Promise<void> => {
     '${data.pension_img}',
     ${data.article_active},
     ${data.current_investment_amount},
-    ${data.total_investment_amount},
-    ${data.minimum_investment_amount},
+    ${data.total_investment_amount * 10000},
+    ${data.minimum_investment_amount * 10000},
     ${data.number_of_participants},
     ${data.maximum_of_participants},
     '${data.deadline_date}'
@@ -61,7 +61,7 @@ export default function PensionInfoArticleWrite() {
     pension_id: pensionId,
     article_title: '',
     article_contents: '',
-    pension_img: '../imgs/pension1.png',
+    pension_img: '../imgs/pension3.png',
     article_active: true,
     current_investment_amount: 0,
     total_investment_amount: 0,
@@ -75,36 +75,32 @@ export default function PensionInfoArticleWrite() {
     await insertArticle(pension);
   };
 
-  const changeUnit = () => {
-    setPension(prevPension => ({
-      ...prevPension,
-      minimum_investment_amount: prevPension.minimum_investment_amount * 10000,
-      total_investment_amount: prevPension.total_investment_amount * 10000,
-    }));
-  };
-
-  useEffect(() => {}, []);
+  const sanitizeInput = (input: string): string =>
+    // 이 정규식은 입력값에서 특정 특수문자를 제거합니다.
+    input.replace(/['"\\`#;]/g, '');
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
 
+    const sanitizedValue = sanitizeInput(value);
+
     if (
       name === 'total_investment_amount' ||
       name === 'minimum_investment_amount' ||
       name === 'maximum_of_participants'
     ) {
-      if (/^\d*$/.test(value)) {
+      if (/^\d*$/.test(sanitizedValue)) {
         setPension(prevPension => ({
           ...prevPension,
-          [name]: Number(value),
+          [name]: Number(sanitizedValue),
         }));
       }
     } else {
       setPension(prevPension => ({
         ...prevPension,
-        [name]: value,
+        [name]: sanitizedValue,
       }));
     }
   };
@@ -127,7 +123,6 @@ export default function PensionInfoArticleWrite() {
       return;
     }
 
-    changeUnit();
     await fetchPension();
 
     alert('게시글 작성 완료');

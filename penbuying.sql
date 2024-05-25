@@ -282,3 +282,8 @@ VALUES
 DELETE FROM chat WHERE chat_no >= 3;
 ALTER TABLE chat AUTO_INCREMENT = 3;
 select * from chat;
+
+####### share_pension init
+DELETE FROM share_pension WHERE article_id >= 4;
+ALTER TABLE share_pension AUTO_INCREMENT = 4;
+select * from share_pension;
