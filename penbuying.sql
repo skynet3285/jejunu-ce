@@ -260,6 +260,35 @@ INSERT INTO `own` (
     200000000 -- investment_amount
 );
 
+INSERT INTO `agenda` (
+    `pension_id`,
+    `agenda_title`,
+    `agenda_contents`,
+    `voting_type`,
+    `deadline_date`
+)  VALUES (
+    3,
+    '펜션 관리인 선출건',
+    '관리자를 선출합니다',
+    'secret',
+    '2024-05-25'
+);
+
+
+INSERT INTO `agenda` (
+    `pension_id`,
+    `agenda_title`,
+    `agenda_contents`,
+    `voting_type`,
+    `deadline_date`
+)  VALUES (
+    3,
+    '펜션 공동 비용 방안 변경건',
+    '펜션 공동 관리 비용을 기존, 지분에 따라 비례해서 부담하는 것에서 1/n으로 부담하는 방식으로 변경하고자 합니다.',
+    'secret',
+    '2024-06-30'
+);
+
 
 
 ################ Dummy insert
@@ -287,3 +316,11 @@ select * from chat;
 DELETE FROM share_pension WHERE article_id >= 4;
 ALTER TABLE share_pension AUTO_INCREMENT = 4;
 select * from share_pension;
+
+####### agenda init
+DELETE FROM agenda WHERE agenda_no >= 3;
+ALTER TABLE agenda AUTO_INCREMENT = 3;
+
+####### agenda_vote init
+DELETE FROM agenda_vote WHERE agenda_no >= 1;
+ALTER TABLE agenda_vote AUTO_INCREMENT = 1;

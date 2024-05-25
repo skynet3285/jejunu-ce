@@ -115,6 +115,7 @@ export default function ChatMain() {
   const [validMsg, setValidMsg] = useState<string>('');
   const [isActive, setIsActive] = useState<boolean>(false);
   const [reload, setReload] = useState<boolean>(false);
+  const [recentChat, setRecentChat] = useState<boolean>(false);
   const [chat, setChat] = useState<Chat[] | null>(null);
   const [message, setMessage] = useState('');
   const textareaRef = useRef(null);
@@ -222,13 +223,8 @@ export default function ChatMain() {
 
     if (chatContainer) {
       chatContainer.scrollTop = chatContainer.scrollHeight;
-      console.log(
-        'scroll to bottom',
-        chatContainer.scrollTop,
-        chatContainer.scrollHeight,
-      );
     }
-  }, [chat]);
+  }, [recentChat]);
 
   const adjustTextareaHeight = () => {
     if (!textareaRef.current) {
@@ -264,6 +260,7 @@ export default function ChatMain() {
       user_id: user?.user_id as string,
       chat_contents: msg,
     });
+    setRecentChat(!recentChat);
   };
 
   const handleKeyDown = (e: {

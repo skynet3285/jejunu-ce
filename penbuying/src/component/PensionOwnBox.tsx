@@ -157,6 +157,7 @@ export default function PensionOwnBox(props: Props) {
               type="button"
               onClick={() => {
                 handleSelect34(4);
+                navigate(`agenda/${pensionId}`);
               }}
             >
               안건관리
