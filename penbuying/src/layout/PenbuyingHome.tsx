@@ -12,6 +12,7 @@ import IconInfo from '../asset/imgs/pensionInvestInfo.svg';
 import IconActiveInfo from '../asset/imgs/pensionInvestInfoA.svg';
 import IconUser from '../asset/imgs/pensionUser.svg';
 import IconActiveUser from '../asset/imgs/pensionUserA.svg';
+import { getSessionUser } from '../module/session';
 
 export default function PenbuyingHome() {
   const location = useLocation();
@@ -20,12 +21,12 @@ export default function PenbuyingHome() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const data = sessionStorage.getItem('userInfo');
-    if (data !== null) {
-      setIsActive(true);
-    } else {
+    const sessionUser = getSessionUser();
+    if (sessionUser === null) {
       navigate('/');
       alert(`로그인이 필요합니다.`);
+    } else {
+      setIsActive(true);
     }
   }, []);
 

@@ -1,96 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import executeQuery from '../module/sql';
+import {
+  User,
+  ChatParticipant,
+  loadRecentChatByChatId,
+  loadChatRoomByChatId,
+  loadChatParticipantsByUserId,
+} from '../module/sqlOrm';
+import { getSessionUser } from '../module/session';
 import userProfile from '../asset/imgs/userDefaultProfile.png';
-
-interface User {
-  user_id: string;
-  user_pw?: string;
-  user_access?: number;
-  user_name?: string;
-  user_phone_number?: string;
-  user_email?: string;
-}
-
-interface ChatParticipant {
-  chat_id: number;
-  user_id: string;
-  participant_date: string;
-}
-
-interface ChatRoom {
-  chat_id: number;
-  chat_title: string;
-  chat_number_ofparticipants: number;
-}
 
 interface PChat {
   chat_id: number;
   chat_title: string;
   recent_message: string;
 }
-
-interface Chat {
-  chat_no: number;
-  chat_id: number;
-  user_id: string;
-  chat_contents: string;
-  chat_date: string;
-}
-
-const loadParticipantChatByUserId = async (
-  userId: string,
-): Promise<ChatParticipant[] | null> => {
-  const query = `
-          SELECT *
-          FROM chat_participants
-          WHERE user_id = '${userId}'
-        `;
-
-  const response = await executeQuery(query);
-  const data = response.data as ChatParticipant[];
-  if (data.length > 0) {
-    return data;
-  }
-  return null;
-};
-
-const loadChatRoomByChatId = async (
-  chatId: string,
-): Promise<ChatRoom | null> => {
-  const query = `
-        SELECT *
-        FROM chat_room
-        WHERE chat_id = '${chatId}'
-      `;
-
-  const response = await executeQuery(query);
-  const data = response.data as ChatRoom[];
-  if (data.length > 0) {
-    return data[0];
-  }
-  return null;
-};
-
-const loadRecentChatByChatId = async (chatId: string): Promise<Chat | null> => {
-  const query = `
-        SELECT c.*
-        FROM chat c
-        JOIN (
-            SELECT chat_id, MAX(chat_no) AS max_chat_no
-            FROM chat
-            GROUP BY chat_id
-        ) AS subquery ON c.chat_id = subquery.chat_id AND c.chat_no = subquery.max_chat_no
-        WHERE c.chat_id = ${chatId};
-    `;
-
-  const response = await executeQuery(query);
-  const data = response.data as Chat[];
-  if (data.length > 0) {
-    return data[0];
-  }
-  return null;
-};
 
 export default function PenbuyingChat() {
   const navigate = useNavigate();
@@ -102,6 +26,17 @@ export default function PenbuyingChat() {
   const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
+    const sessionUser = getSessionUser();
+
+    if (sessionUser === null) {
+      navigate('/');
+      alert(`로그인이 필요합니다.`);
+    } else {
+      setUser(sessionUser);
+    }
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setReload(prevReload => !prevReload);
     }, 500);
@@ -110,54 +45,52 @@ export default function PenbuyingChat() {
   }, []);
 
   useEffect(() => {
-    const data = sessionStorage.getItem('userInfo');
-    if (data !== null) {
-      const userInfo = JSON.parse(data) as User;
-      setUser(userInfo);
-    } else {
-      navigate('/');
-      alert(`로그인이 필요합니다.`);
-    }
-  }, []);
-
-  useEffect(() => {
     const fetchParticipantChat = async (userId: string) => {
-      const response = await loadParticipantChatByUserId(userId);
+      const response = await loadChatParticipantsByUserId(userId);
       const data = response as ChatParticipant[];
       setChatParticipants(data);
     };
 
     const processChatParticipants = async (): Promise<void> => {
-      const pchat: PChat[] = [];
-
       if (chatParticipants === null) {
+        // 참여중인 채팅방이 없습니다.
         return;
       }
+      const chats: PChat[] = [];
+      let chatNo = 0;
 
+      // 참여중인 모든 채팅방 각각의 최근 메시지를 가져옵니다.
       const promises = (chatParticipants as ChatParticipant[])
         .filter(participant => participant !== undefined)
         .map(async participant => {
-          const recentChat = await loadRecentChatByChatId(
-            participant.chat_id.toString(),
-          );
-          const chat = await loadChatRoomByChatId(
-            participant.chat_id.toString(),
-          );
-          if (recentChat === null || chat === null) {
+          const participantChatId: string = participant.chat_id.toString();
+
+          const recentChat = await loadRecentChatByChatId(participantChatId);
+          const chatRoom = await loadChatRoomByChatId(participantChatId);
+          chatNo += 1;
+
+          if (chatRoom === null) {
             return null;
           }
+          if (recentChat === null) {
+            return {
+              chat_id: chatNo,
+              chat_title: chatRoom.chat_title,
+              recent_message: '',
+            } as PChat;
+          }
           return {
-            chat_id: recentChat.chat_id,
-            chat_title: chat.chat_title,
+            chat_id: chatNo,
+            chat_title: chatRoom.chat_title,
             recent_message: recentChat.chat_contents,
           } as PChat;
         });
 
       const results = await Promise.all(promises);
       const validResults = results.filter(result => result !== null);
-      pchat.push(...(validResults as PChat[]));
+      chats.push(...(validResults as PChat[]));
 
-      setPenbuyingChat(pchat);
+      setPenbuyingChat(chats);
     };
 
     if (user === null) {
@@ -165,7 +98,7 @@ export default function PenbuyingChat() {
     }
     fetchParticipantChat(user.user_id);
     processChatParticipants();
-  }, [reload, user]);
+  }, [reload]);
 
   return (
     <article className="flex flex-col">

@@ -1,35 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import executeQuery from '../module/sql';
-
-interface User {
-  user_id: string;
-  user_pw?: string;
-  user_access?: number;
-  user_name?: string;
-  user_phone_number?: string;
-  user_email?: string;
-}
-
-interface UserLogin {
-  user_id: string;
-  user_pw: string;
-}
-
-const loginUser = async (user: UserLogin): Promise<User | null> => {
-  const query = `
-    SELECT *
-    FROM user
-    WHERE user_id = '${user.user_id}' AND user_pw = '${user.user_pw}'
-  `;
-
-  const response = await executeQuery(query);
-  const data = response.data as User[];
-  if (data.length > 0) {
-    return data[0];
-  }
-  return null;
-};
+import { User, UserLogin, loginUser, sanitizeInput } from '../module/sqlOrm';
+import { getSessionUser, setSessionUser } from '../module/session';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -39,17 +11,15 @@ export default function Login() {
   });
 
   useEffect(() => {
-    const data = sessionStorage.getItem('userInfo');
-    if (data !== null) {
-      const userInfo = JSON.parse(data) as User;
+    const sessionUser = getSessionUser();
+
+    if (sessionUser === null) {
+      //
+    } else {
       navigate('/main/penbuying');
-      alert(`${userInfo.user_name}님 안녕하세요.`);
+      alert(`${sessionUser.user_name}님 안녕하세요.`);
     }
   }, []);
-
-  const sanitizeInput = (input: string): string =>
-    // 이 정규식은 입력값에서 특정 특수문자를 제거합니다.
-    input.replace(/['"\\`#;]/g, '');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,6 +32,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Check Validation
     if (userLogin.user_id === '' || userLogin.user_pw === '') {
       alert('아이디와 비밀번호를 입력하세요');
       return;
@@ -70,9 +41,9 @@ export default function Login() {
     const response = await loginUser(userLogin);
     if (response) {
       const user = response as User;
-      sessionStorage.setItem('userInfo', JSON.stringify(user));
-      alert(`${user.user_name}님 안녕하세요.`);
+      setSessionUser(user);
 
+      alert(`${user.user_name}님 안녕하세요.`);
       navigate('/main/penbuying');
       return;
     }

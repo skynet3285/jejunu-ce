@@ -5,16 +5,7 @@ import React, {
   useMemo,
   PropsWithChildren,
 } from 'react';
-
-interface User {
-  user_id: string;
-  user_pw?: string;
-  user_access?: number;
-  user_name?: string;
-  user_phone_number?: string;
-  user_email?: string;
-}
-
+import { User } from '../src/module/sqlOrm';
 export interface UserContextType {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;

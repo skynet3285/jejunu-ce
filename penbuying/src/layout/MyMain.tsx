@@ -13,7 +13,7 @@ export default function MyMain() {
         <Route path="/info/:pensionId" element={<PensionInfo />} />
         <Route path="/agenda/:pensionId" element={<Agenda />} />
         <Route path="/agendaWrite/:pensionId" element={<AgendaWrite />} />
-        <Route path="/vote/:agendaId" element={<Vote />} />
+        <Route path="/vote/:agendaNo" element={<Vote />} />
       </Routes>
     </main>
   );

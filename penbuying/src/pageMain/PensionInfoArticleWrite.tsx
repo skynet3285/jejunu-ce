@@ -6,20 +6,7 @@ import cameraIcon from '../asset/imgs/camera.svg';
 import plusIcon from '../asset/imgs/plusBlack.svg';
 import crossIcon from '../asset/imgs/cross.svg';
 import hwpIcon from '../asset/imgs/hwpIcon.png';
-
-interface Pension {
-  pension_id: string | undefined;
-  article_title: string;
-  article_contents: string;
-  pension_img: string;
-  article_active: boolean;
-  current_investment_amount: number;
-  total_investment_amount: number;
-  minimum_investment_amount: number;
-  number_of_participants: number;
-  maximum_of_participants: number;
-  deadline_date: string;
-}
+import { Pension } from '../module/sqlOrm';
 
 const insertArticle = async (data: Pension): Promise<void> => {
   const query = `
@@ -54,11 +41,12 @@ const insertArticle = async (data: Pension): Promise<void> => {
 };
 
 export default function PensionInfoArticleWrite() {
-  const { pensionId } = useParams();
   const navigate = useNavigate();
+  const { pensionId } = useParams();
 
   const [pension, setPension] = useState<Pension>({
-    pension_id: pensionId,
+    article_id: 0,
+    pension_id: pensionId ? Number(pensionId) : 0,
     article_title: '',
     article_contents: '',
     pension_img: '../imgs/pension3.png',

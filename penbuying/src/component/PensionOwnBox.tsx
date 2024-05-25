@@ -1,55 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import executeQuery from '../module/sql';
 import PensionOwnReservation from './PensionOwnReservation';
+import { Pension, loadPensionByPensionId } from '../module/sqlOrm';
 
 interface Props {
   pensionId: number;
   ownPercent: number;
 }
 
-interface Pension {
-  article_id: number;
-  pension_id: number;
-  article_title: string;
-  article_contents: string;
-  pension_img: string;
-  article_active: boolean;
-  current_investment_amount: number;
-  total_investment_amount: number;
-  minimum_investment_amount: number;
-  number_of_participants: number;
-  maximum_of_participants: number;
-  deadline_date: string;
-}
-
-const loadPensionByPensionId = async (
-  pensionId: number,
-): Promise<Pension | null> => {
-  const query = `
-      SELECT *
-      FROM share_pension
-      WHERE pension_id = ${pensionId}
-    `;
-
-  const response = await executeQuery(query);
-  const pensionData: Pension[] = response.data;
-  if (pensionData.length > 0) {
-    return pensionData[0];
-  }
-  return null;
-};
-
-export default function PensionOwnBox(props: Props) {
-  const { pensionId, ownPercent } = props;
+export default function PensionOwnBox({ pensionId, ownPercent }: Props) {
+  const navigate = useNavigate();
   const [pension, setPension] = useState<Pension | null>(null);
   const [select, setSelect] = useState<number>(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPension = async () => {
       const data = (await loadPensionByPensionId(pensionId)) as Pension;
-
       setPension(data);
     };
 
@@ -95,9 +61,23 @@ export default function PensionOwnBox(props: Props) {
   }
 
   function getGreenButtonStyle(index: number) {
-    return select !== index
-      ? 'border-green-700 bg-green-700'
-      : 'border-gray-400 bg-gray-400';
+    const notActive = 'border-green-700 bg-green-700';
+    const active = 'border-gray-400 bg-gray-400';
+
+    switch (index) {
+      case 3:
+        if (select === 3) {
+          return active;
+        }
+        return notActive;
+      case 4:
+        if (select === 4) {
+          return active;
+        }
+        return notActive;
+      default:
+        return notActive;
+    }
   }
 
   return (

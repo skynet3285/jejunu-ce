@@ -1,35 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import executeQuery from '../module/sql';
 import PensionAgendaBox from '../component/PensionAgendaBox';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 import plusIcon from '../asset/imgs/plus.svg';
-
-interface Agenda {
-  agenda_no: number;
-  pension_id: number;
-  agenda_title: string;
-  agenda_contents: string;
-  voting_type: string;
-  deadline_date: string;
-}
-
-const loadAgendaByPensionId = async (
-  pensionId: string,
-): Promise<Agenda[] | null> => {
-  const query = `
-        SELECT *
-        FROM agenda
-        WHERE pension_id = '${pensionId}'
-      `;
-
-  const response = await executeQuery(query);
-  const data = response.data as Agenda[];
-  if (data.length > 0) {
-    return data;
-  }
-  return null;
-};
+import { Agenda, loadAgendasByPensionId } from '../module/sqlOrm';
 
 export default function AgendaMain() {
   const { pensionId } = useParams();
@@ -41,7 +15,7 @@ export default function AgendaMain() {
       if (pensionId === undefined) {
         return;
       }
-      const response = await loadAgendaByPensionId(pensionId);
+      const response = await loadAgendasByPensionId(pensionId);
       const data = response as Agenda[];
       setAgenda(data);
     };

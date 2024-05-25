@@ -1,37 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import executeQuery from '../module/sql';
 import PensionInvestBox from '../component/PensionInvestBox';
 import plusIcon from '../asset/imgs/plus.svg';
-
-interface Pension {
-  article_id: number;
-  pension_id: number;
-  article_title: string;
-  article_contents: string;
-  pension_img: string;
-  article_active: boolean;
-  current_investment_amount: number;
-  total_investment_amount: number;
-  minimum_investment_amount: number;
-  number_of_participants: number;
-  maximum_of_participants: number;
-  deadline_date: string;
-}
-
-const loadPension = async (): Promise<Pension[] | null> => {
-  const query = `
-    SELECT *
-    FROM share_pension
-  `;
-
-  const response = await executeQuery(query);
-  const data = response.data as Pension[]; // Assuming response is an array of users
-  if (data.length > 0) {
-    return data;
-  }
-  return null;
-};
+import { Pension, loadPensions } from '../module/sqlOrm';
 
 export default function PensionShare() {
   const navigate = useNavigate();
@@ -40,7 +11,7 @@ export default function PensionShare() {
 
   useEffect(() => {
     const fetchPensions = async () => {
-      const response = await loadPension();
+      const response = await loadPensions();
       const data = response as Pension[];
       setPensions(data);
     };

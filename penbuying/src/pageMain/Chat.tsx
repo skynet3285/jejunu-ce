@@ -1,128 +1,71 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
-import executeQuery from '../module/sql';
 import ChatBox from '../layout/ChatBox';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
+import {
+  User,
+  Chat,
+  loadChatsByChatId,
+  sendChat,
+  ChatParticipant,
+  loadChatParticipantsByUserId,
+  ChatRoom,
+  loadChatRoomByChatId,
+  sanitizeInput,
+} from '../module/sqlOrm';
+import { getSessionUser } from '../module/session';
 
-interface User {
-  user_id: string;
-  user_pw?: string;
-  user_access?: number;
-  user_name?: string;
-  user_phone_number?: string;
-  user_email?: string;
-}
-
-interface Chat {
-  chat_no: number;
-  chat_id: number;
-  user_id: string;
-  chat_contents: string;
-  chat_date: string;
-}
-
-interface ChatParticipant {
-  chat_id: number;
-  user_id: string;
-  participant_date: string;
-}
-
-interface ChatRoom {
-  chat_id: number;
-  chat_title: string;
-  chat_number_ofparticipants: number;
-}
-
-const loadParticipantChatByUserId = async (
-  userId: string,
-): Promise<ChatParticipant[] | null> => {
-  const query = `
-        SELECT *
-        FROM chat_participants
-        WHERE user_id = '${userId}'
-    `;
-
-  const response = await executeQuery(query);
-  const data = response.data as ChatParticipant[];
-  if (data.length > 0) {
-    return data;
-  }
-  return null;
-};
-
-const loadChatRoomByChatId = async (
-  chatId: string,
-): Promise<ChatRoom | null> => {
-  const query = `
-          SELECT *
-          FROM chat_room
-          WHERE chat_id = '${chatId}'
-        `;
-
-  const response = await executeQuery(query);
-  const data = response.data as ChatRoom[];
-  if (data.length > 0) {
-    return data[0];
-  }
-  return null;
-};
-
-const loadChatByChatId = async (chatId: string): Promise<Chat[] | null> => {
-  const query = `
-          SELECT *
-          FROM chat
-          WHERE chat_id = ${chatId};
-      `;
-
-  const response = await executeQuery(query);
-  const data = response.data as Chat[];
-  if (data.length > 0) {
-    return data;
-  }
-  return null;
-};
-
-interface SendChatParams {
+interface ChatParams {
   chat_id: number;
   user_id: string;
   chat_contents: string;
 }
 
-const sendChat = async (param: SendChatParams): Promise<void> => {
+async function sendChatA(param: ChatParams): Promise<void> {
   const formatDateToSQL = (): string => {
     const date = new Date();
     const pad = (num: number) => num.toString().padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   };
 
-  const query = `
-    INSERT INTO chat (
-        chat_id,
-        user_id,
-        chat_contents,
-        chat_date
-    ) VALUES (${param.chat_id}, '${param.user_id}', '${param.chat_contents}', '${formatDateToSQL()}')
-    `;
-
-  await executeQuery(query);
-};
+  await sendChat({
+    chat_no: 0,
+    chat_id: param.chat_id,
+    user_id: param.user_id,
+    chat_contents: param.chat_contents,
+    chat_date: formatDateToSQL(),
+  });
+}
 
 export default function ChatMain() {
+  // 채팅창의 스크롤을 가장 아래로 내리기 위한 ref
+  // const chatContainerRef = useRef(null);
+  //
+  // 채팅창의 스크롤을 가장 아래로 내리기 위한 useEffect
+  // useEffect(() => {
+  //   if (!chatContainerRef.current) {
+  //     return;
+  //   }
+  //   const chatContainer = chatContainerRef.current as HTMLDivElement;
+
+  //   if (chatContainer) {
+  //     chatContainer.scrollTop = chatContainer.scrollHeight;
+  //   }
+  // }, [chat]);
+
   const navigate = useNavigate();
-  const [chatTitle, setChatTitle] = useState<string>('');
   const { chatId } = useParams();
-  const [user, setUser] = useState<User | null>(null);
   const [validMsg, setValidMsg] = useState<string>('');
+  const [user, setUser] = useState<User | null>(null);
+  const [chatTitle, setChatTitle] = useState<string>('');
   const [isActive, setIsActive] = useState<boolean>(false);
   const [reload, setReload] = useState<boolean>(false);
-  const [recentChat, setRecentChat] = useState<boolean>(false);
   const [chat, setChat] = useState<Chat[] | null>(null);
   const [message, setMessage] = useState('');
   const textareaRef = useRef(null);
-  // 채팅창의 스크롤을 가장 아래로 내리기 위한 ref
-  // const chatContainerRef = useRef(null);
 
   useEffect(() => {
+    // 유효성 검사후 이상이 감지되면 경고창을 띄우고 이전 페이지로 이동
     if (validMsg !== '') {
       alert(validMsg);
       navigate('..');
@@ -130,39 +73,28 @@ export default function ChatMain() {
   }, [validMsg]);
 
   useEffect(() => {
-    const data = sessionStorage.getItem('userInfo');
-
-    if (data !== null) {
-      const userInfo = JSON.parse(data) as User;
-      setUser(userInfo);
-    } else {
-      navigate('/');
-      alert(`로그인이 필요합니다.`);
-    }
-  }, []);
-
-  useEffect(() => {
     const checkValidUser = async () => {
-      if (user === null) {
-        setValidMsg('사용자 정보를 불러올수 없습니다');
+      const sessionUser = getSessionUser();
+
+      if (sessionUser === null) {
+        navigate('/');
+        alert(`로그인이 필요합니다.`);
         return false;
       }
-      const response = await loadParticipantChatByUserId(user.user_id);
+      setUser(sessionUser);
+
+      const response = await loadChatParticipantsByUserId(sessionUser.user_id);
       const data = response as ChatParticipant[];
 
-      if (data === null) {
-        setValidMsg('채팅방을 불러올수 없습니다');
-        return false;
-      }
-      const hasMatchingChatId = data.some(d => d.chat_id.toString() === chatId);
-      if (!hasMatchingChatId) {
+      if (data === null || !data.some(d => d.chat_id.toString() === chatId)) {
+        // data가 null이 아닐때 오른쪽 식이 수행됨
         setValidMsg('채팅방에 참여하지 않은 사용자입니다');
         return false;
       }
       return true;
     };
 
-    const checkChatRoom = async () => {
+    const checkValidChatRoom = async () => {
       if (chatId === undefined) {
         setValidMsg('채팅방을 선택해주세요');
         return false;
@@ -181,17 +113,14 @@ export default function ChatMain() {
     const executeTasks = async () => {
       if (
         ((await checkValidUser()) as boolean) &&
-        ((await checkChatRoom()) as boolean)
+        ((await checkValidChatRoom()) as boolean)
       ) {
         setIsActive(true); // 유효성 검사 통과
       }
     };
 
-    if (user === null) {
-      return;
-    }
     executeTasks();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -203,7 +132,7 @@ export default function ChatMain() {
 
   useEffect(() => {
     const fetchChat = async () => {
-      const response = await loadChatByChatId(chatId as string);
+      const response = await loadChatsByChatId(chatId as string);
       const data = response as Chat[];
       if (data === null) {
         return;
@@ -211,24 +140,11 @@ export default function ChatMain() {
       setChat(data);
     };
 
-    if (isActive) {
-      fetchChat();
-    }
+    fetchChat();
   }, [reload]);
 
-  // 채팅창의 스크롤을 가장 아래로 내리기 위한 useEffect
-  // useEffect(() => {
-  //   if (!chatContainerRef.current) {
-  //     return;
-  //   }
-  //   const chatContainer = chatContainerRef.current as HTMLDivElement;
-
-  //   if (chatContainer) {
-  //     chatContainer.scrollTop = chatContainer.scrollHeight;
-  //   }
-  // }, [chat]);
-
   const adjustTextareaHeight = () => {
+    // 텍스트가 길때 입력창의 높이 조절하는 함수
     if (!textareaRef.current) {
       return;
     }
@@ -239,16 +155,8 @@ export default function ChatMain() {
     }
   };
 
-  const handleInputChange = (e: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    setMessage(e.target.value);
-    adjustTextareaHeight();
-  };
-
-  const sanitizeInput = (input: string): string =>
-    // 이 정규식은 입력값에서 특정 특수문자를 제거합니다.
-    input.replace(/['"\\`#;]/g, '');
+  adjustTextareaHeight();
+  useEffect(() => {}, [message]);
 
   const handleSendMessage = () => {
     setMessage('');
@@ -257,28 +165,13 @@ export default function ChatMain() {
     if (msg.trim() === '') {
       return; // 메시지가 빈 문자열이거나 공백만 포함된 경우 전송하지 않음
     }
-    sendChat({
+
+    sendChatA({
       chat_id: Number(chatId),
       user_id: user?.user_id as string,
       chat_contents: msg,
     });
-    setRecentChat(!recentChat);
   };
-
-  const handleKeyDown = (e: {
-    key: string;
-    shiftKey: any;
-    preventDefault: () => void;
-  }) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // 기본 Enter 동작을 막습니다 (줄바꿈 방지)
-      handleSendMessage(); // 메시지 전송
-    }
-  };
-
-  useEffect(() => {
-    adjustTextareaHeight();
-  }, [message]);
 
   return (
     <article className="flex h-[90vh] flex-col">
@@ -313,12 +206,23 @@ export default function ChatMain() {
           ))}
       </div>
       {isActive && (
-        <div className="absolute bottom-20 flex w-full items-center px-2">
+        <div className="absolute bottom-40 flex w-full items-center px-2">
           <textarea
             ref={textareaRef}
             value={message}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
+            onChange={(e: { target: { value: SetStateAction<string> } }) => {
+              setMessage(e.target.value);
+            }}
+            onKeyDown={(e: {
+              key: string;
+              shiftKey: any;
+              preventDefault: () => void;
+            }) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // 기본 Enter 동작을 막습니다 (줄바꿈 방지)
+                handleSendMessage(); // 메시지 전송
+              }
+            }}
             className="flex-grow resize-none overflow-hidden rounded border p-2"
             placeholder="메시지를 입력하세요."
             rows={1}

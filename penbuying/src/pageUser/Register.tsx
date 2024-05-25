@@ -1,30 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import executeQuery from '../module/sql';
-
-interface User {
-  user_id: string;
-  user_pw?: string;
-  user_access?: number;
-  user_name?: string;
-  user_phone_number?: string;
-  user_email?: string;
-}
-
-const insertUser = async (user: User): Promise<void> => {
-  const query = `
-      INSERT INTO user (
-        user_id,
-        user_pw,
-        user_access,
-        user_name,
-        user_phone_number,
-        user_email
-      ) VALUES ('${user.user_id}', '${user.user_pw}', '${user.user_access}', '${user.user_name}', '${user.user_phone_number}', '${user.user_email}')
-    `;
-
-  await executeQuery(query);
-};
+import { User, registerUser, sanitizeInput } from '../module/sqlOrm';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -37,10 +13,6 @@ export default function Register() {
     user_phone_number: '',
     user_email: '',
   });
-
-  const sanitizeInput = (input: string): string =>
-    // 이 정규식은 입력값에서 특정 특수문자를 제거합니다.
-    input.replace(/['"\\`#;]/g, '');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,7 +34,7 @@ export default function Register() {
       return;
     }
     try {
-      await insertUser(user);
+      await registerUser(user);
       alert('회원가입 성공');
       navigate('/');
     } catch {

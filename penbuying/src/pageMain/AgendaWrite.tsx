@@ -1,43 +1,21 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import executeQuery from '../module/sql';
+import {
+  Agenda,
+  registerAgenda,
+  sanitizeInput,
+  loadOwnPensionByUserIdAndPensionId,
+  OwnPension,
+} from '../module/sqlOrm';
+import { getSessionUser } from '../module/session';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
-
-interface Agenda {
-  agenda_no: number;
-  pension_id: number;
-  agenda_title: string;
-  agenda_contents: string;
-  voting_type: string;
-  deadline_date: string;
-}
-
-const insertAgenda = async (agenda: Agenda): Promise<void> => {
-  const query = `
-  INSERT INTO agenda(
-    pension_id,
-    agenda_title,
-    agenda_contents,
-    voting_type,
-    deadline_date
-  ) VALUES (
-    ${agenda.pension_id},
-    '${agenda.agenda_title}',
-    '${agenda.agenda_contents}',
-    '${agenda.voting_type}',
-    '${agenda.deadline_date}'
-  )
-  `;
-
-  await executeQuery(query);
-};
 
 export default function AgendaWrite() {
   const navigate = useNavigate();
   const { pensionId } = useParams();
   const [agenda, setAgenda] = useState<Agenda>({
     agenda_no: 0,
-    pension_id: Number(pensionId),
+    pension_id: pensionId ? Number(pensionId) : 0,
     agenda_title: '',
     agenda_contents: '',
     voting_type: 'secret',
@@ -45,19 +23,33 @@ export default function AgendaWrite() {
   });
 
   useEffect(() => {
-    if (!pensionId) {
-      alert('잘못된 접근입니다.');
-      navigate('..');
+    const checkOwnPesion = async (
+      userId: string,
+      pensio_id: string,
+    ): Promise<void> => {
+      const response = await loadOwnPensionByUserIdAndPensionId(
+        userId,
+        pensio_id,
+      );
+      const data = response as OwnPension | null;
+      if (data === null) {
+        alert('잘못된 접근입니다.');
+        navigate('..');
+      }
+    };
+
+    const sessionUser = getSessionUser();
+    if (sessionUser === null) {
+      navigate('/');
+      alert(`로그인이 필요합니다.`);
+    } else {
+      checkOwnPesion(sessionUser.user_id, pensionId as string);
     }
   }, []);
 
   const fetchAgenda = async () => {
-    await insertAgenda(agenda);
+    await registerAgenda(agenda);
   };
-
-  const sanitizeInput = (input: string): string =>
-    // 이 정규식은 입력값에서 특정 특수문자를 제거합니다.
-    input.replace(/['"\\`#;]/g, '');
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -73,7 +65,7 @@ export default function AgendaWrite() {
   };
 
   const handleSubmit = async () => {
-    if (!pensionId) {
+    if (pensionId === undefined) {
       return;
     }
 
@@ -89,7 +81,7 @@ export default function AgendaWrite() {
     await fetchAgenda();
 
     alert('안건 작성 완료');
-    navigate('..');
+    navigate(`../agenda/${pensionId}`);
   };
 
   return (

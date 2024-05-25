@@ -1,53 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import executeQuery from '../module/sql';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 import pensionBackground from '../asset/imgs/pensionBackground.png';
 import hwpIcon from '../asset/imgs/hwpIcon.png';
-
-interface Pension {
-  article_id: number;
-  pension_id: number;
-  article_title: string;
-  article_contents: string;
-  pension_img: string;
-  article_active: boolean;
-  current_investment_amount: number;
-  total_investment_amount: number;
-  minimum_investment_amount: number;
-  number_of_participants: number;
-  maximum_of_participants: number;
-  deadline_date: string;
-}
-
-const loadPension = async (pensionId: string): Promise<Pension | null> => {
-  const query = `
-      SELECT *
-      FROM share_pension
-      WHERE pension_id = ${pensionId}
-    `;
-
-  const response = await executeQuery(query);
-  const data = response.data as Pension[]; // Assuming response is an array of users
-  if (data.length > 0) {
-    return data[0];
-  }
-  return null;
-};
+import { Pension, loadPensionByPensionId } from '../module/sqlOrm';
 
 export default function PensionInfoInvest() {
+  const navigate = useNavigate();
+  const { pensionId } = useParams();
   const [pension, setPension] = useState<Pension>();
   const [investmentAmount, setInvestmentAmount] = useState<string>('');
-
-  const { pensionId } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPension = async () => {
       if (!pensionId) {
         return;
       }
-      const response = await loadPension(pensionId);
+      const response = await loadPensionByPensionId(Number(pensionId));
       const data = response as Pension;
 
       setPension(data);

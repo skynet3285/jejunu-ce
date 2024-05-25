@@ -11,6 +11,7 @@ import guide7 from '../asset/imgs/share_guide7.png';
 
 export default function TutorialSharePension() {
   const navigate = useNavigate();
+
   return (
     <article className="flex flex-col">
       <div className="mt-10 flex h-auto w-full">
@@ -47,7 +48,7 @@ export default function TutorialSharePension() {
         <div className="mt-5 font-bold">
           <p>양식 파일을 이용하여 개인간 계약을 하세요</p>
         </div>
-        <div className="tablet:text-sm mt-10 flex h-auto flex-col items-center justify-center">
+        <div className="mt-10 flex h-auto flex-col items-center justify-center tablet:text-sm">
           <div className="flex h-[15rem] flex-col items-center justify-around">
             <img className="w-[10rem]" src={guide1} alt="guide1" />
             <p>주도자는 부동산 매물을 확인합니다</p>

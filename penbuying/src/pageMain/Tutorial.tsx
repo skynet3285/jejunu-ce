@@ -25,7 +25,7 @@ export default function Tutorial() {
         <div className="w-[24px]" />
       </div>
       <div className="mt-10 flex flex-col items-center justify-center">
-        <div className="tablet:w-[24rem] tablet:text-sm flex h-auto w-[20rem] flex-col justify-center rounded-3xl border bg-gray-300 p-4 text-[0.65rem]">
+        <div className="flex h-auto w-[20rem] flex-col justify-center rounded-3xl border bg-gray-300 p-4 text-[0.65rem] tablet:w-[24rem] tablet:text-sm">
           <div className=" my-1 flex items-center">
             <img
               className="h-[1.4rem] w-[1.4rem]"

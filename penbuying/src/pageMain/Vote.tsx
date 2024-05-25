@@ -1,112 +1,41 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import executeQuery from '../module/sql';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
-
-interface Agenda {
-  agenda_no: number;
-  pension_id: number;
-  agenda_title: string;
-  agenda_contents: string;
-  voting_type: string;
-  deadline_date: string;
-}
-
-interface AgendaVote {
-  agenda_no: number;
-  user_id: string;
-  participate_vote: boolean;
-  vote: string;
-}
-
-interface User {
-  user_id: string;
-  user_pw?: string;
-  user_access?: number;
-  user_name?: string;
-  user_phone_number?: string;
-  user_email?: string;
-}
-
-const loadAgendaByPensionId = async (
-  agendaNo: string,
-): Promise<Agenda | null> => {
-  const query = `
-          SELECT *
-          FROM agenda
-          WHERE agenda_no = '${agendaNo}'
-        `;
-
-  const response = await executeQuery(query);
-  const data = response.data as Agenda[];
-  if (data.length > 0) {
-    return data[0];
-  }
-  return null;
-};
-
-const loadVote = async (
-  agendaNo: string,
-  userId: string,
-): Promise<AgendaVote | null> => {
-  const query = `
-        SELECT vote
-        FROM agenda_vote
-        WHERE agenda_no = '${agendaNo}' AND user_id = '${userId}'
-    `;
-
-  const response = await executeQuery(query);
-  const data = response.data as AgendaVote[];
-  if (data.length > 0) {
-    return data[0];
-  }
-  return null;
-};
-
-const insertVote = async (
-  agendaNo: string,
-  userId: string,
-  vote: string,
-): Promise<void> => {
-  const query = `
-    INSERT INTO agenda_vote (
-        agenda_no,
-        user_id,
-        participate_vote,
-        vote
-    )
-        VALUES ('${agendaNo}', '${userId}', true, '${vote}')
-    `;
-
-  await executeQuery(query);
-};
+import {
+  User,
+  Agenda,
+  loadAgendaByAgendaNo,
+  AgendaVote,
+  loadVoteByAgendaNoAndUserId,
+  registerVote,
+} from '../module/sqlOrm';
+import { getSessionUser } from '../module/session';
 
 export default function Vote() {
-  const { agendaId } = useParams();
   const navigate = useNavigate();
+  const { agendaNo } = useParams();
   const [agenda, setAgenda] = useState<Agenda | null>(null);
   const [vote, setVote] = useState<AgendaVote | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
-    const data = sessionStorage.getItem('userInfo');
+    const sessionUser = getSessionUser();
 
-    if (data !== null) {
-      const userInfo = JSON.parse(data) as User;
-      setUser(userInfo);
-    } else {
+    if (sessionUser == null) {
       navigate('/');
       alert(`로그인이 필요합니다.`);
+    } else {
+      setUser(sessionUser);
     }
   }, []);
 
   useEffect(() => {
     const fetchAgenda = async () => {
-      if (agendaId === undefined) {
+      if (agendaNo === undefined) {
         return;
       }
-      const response = await loadAgendaByPensionId(agendaId);
+      const response = await loadAgendaByAgendaNo(agendaNo);
       const data = response as Agenda;
       setAgenda(data);
     };
@@ -116,10 +45,13 @@ export default function Vote() {
 
   useEffect(() => {
     const fetchAgendaVote = async () => {
-      if (agendaId === undefined || user === null) {
+      if (agendaNo === undefined || user === null) {
         return;
       }
-      const response = await loadVote(agendaId, user.user_id);
+      const response = await loadVoteByAgendaNoAndUserId(
+        agendaNo,
+        user.user_id,
+      );
       const data = response as AgendaVote;
       setVote(data);
     };
@@ -165,7 +97,12 @@ export default function Vote() {
             className="w-[44%] rounded-lg border border-green-600 bg-green-600 py-1 text-white"
             type="button"
             onClick={() => {
-              insertVote(agendaId as string, user?.user_id as string, '찬성');
+              registerVote({
+                agenda_no: Number(agendaNo),
+                user_id: user?.user_id as string,
+                participate_vote: true,
+                vote: '찬성',
+              });
               alert('찬성 투표가 완료되었습니다.');
               setReload(!reload);
             }}
@@ -176,7 +113,12 @@ export default function Vote() {
             className="w-[44%] rounded-lg border border-red-600 bg-red-600 py-1 text-white"
             type="button"
             onClick={() => {
-              insertVote(agendaId as string, user?.user_id as string, '반대');
+              registerVote({
+                agenda_no: Number(agendaNo),
+                user_id: user?.user_id as string,
+                participate_vote: true,
+                vote: '반대',
+              });
               alert('반대 투표가 완료되었습니다.');
               setReload(!reload);
             }}

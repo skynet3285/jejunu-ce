@@ -2,45 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import userProfile from '../asset/imgs/userDefaultProfile.png';
 import PensionOwnBox from '../component/PensionOwnBox';
-import executeQuery from '../module/sql';
-
-interface User {
-  user_id: string;
-  user_pw?: string;
-  user_access?: number;
-  user_name?: string;
-  user_phone_number?: string;
-  user_email?: string;
-}
-
-interface OwnPension {
-  user_id: string;
-  pension_id: number;
-  own_percent: number;
-  investment_amount: number;
-}
-
-const loadOwnPensionByUserId = async (
-  userId: string,
-): Promise<OwnPension[] | null> => {
-  const query = `
-      SELECT *
-      FROM own
-      WHERE user_id = '${userId}'
-    `;
-
-  const response = await executeQuery(query);
-  const data = response.data as OwnPension[];
-  if (data.length > 0) {
-    return data;
-  }
-  return null;
-};
+import { User, OwnPension, loadOwnPensionsByUserId } from '../module/sqlOrm';
+import { getSessionUser } from '../module/session';
 
 export default function My() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User>({
     user_id: '',
+    user_pw: '',
     user_name: '',
     user_access: 0,
     user_phone_number: '',
@@ -50,20 +19,18 @@ export default function My() {
 
   useEffect(() => {
     const fetchOwnPensions = async (userId: string) => {
-      const response = await loadOwnPensionByUserId(userId);
+      const response = await loadOwnPensionsByUserId(userId);
       const data = response as OwnPension[];
       setOwnPensions(data);
     };
+    const sessionUser = getSessionUser();
 
-    const data = sessionStorage.getItem('userInfo');
-    if (data !== null) {
-      const userInfo = JSON.parse(data) as User;
-      setUser(userInfo);
-
-      fetchOwnPensions(userInfo.user_id);
-    } else {
+    if (sessionUser === null) {
       navigate('/');
       alert(`로그인이 필요합니다.`);
+    } else {
+      setUser(sessionUser);
+      fetchOwnPensions(sessionUser.user_id);
     }
   }, []);
 
