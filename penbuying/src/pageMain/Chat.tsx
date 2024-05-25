@@ -119,7 +119,8 @@ export default function ChatMain() {
   const [chat, setChat] = useState<Chat[] | null>(null);
   const [message, setMessage] = useState('');
   const textareaRef = useRef(null);
-  const chatContainerRef = useRef(null);
+  // 채팅창의 스크롤을 가장 아래로 내리기 위한 ref
+  // const chatContainerRef = useRef(null);
 
   useEffect(() => {
     if (validMsg !== '') {
@@ -215,16 +216,17 @@ export default function ChatMain() {
     }
   }, [reload]);
 
-  useEffect(() => {
-    if (!chatContainerRef.current) {
-      return;
-    }
-    const chatContainer = chatContainerRef.current as HTMLDivElement;
+  // 채팅창의 스크롤을 가장 아래로 내리기 위한 useEffect
+  // useEffect(() => {
+  //   if (!chatContainerRef.current) {
+  //     return;
+  //   }
+  //   const chatContainer = chatContainerRef.current as HTMLDivElement;
 
-    if (chatContainer) {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-  }, [recentChat]);
+  //   if (chatContainer) {
+  //     chatContainer.scrollTop = chatContainer.scrollHeight;
+  //   }
+  // }, [chat]);
 
   const adjustTextareaHeight = () => {
     if (!textareaRef.current) {
@@ -296,8 +298,9 @@ export default function ChatMain() {
         <div className="w-[24px]" />
       </div>
       <div
-        ref={chatContainerRef}
-        className={`ref=${chatContainerRef} mt-2 flex h-[75vh] flex-col space-y-1 overflow-y-auto px-2`}
+        // 채팅창의 스크롤을 가장 아래로 내리기 위한 ref
+        // ref={chatContainerRef}
+        className="mt-2 flex h-[75vh] flex-col space-y-1 overflow-y-auto px-2"
       >
         {isActive &&
           chat &&

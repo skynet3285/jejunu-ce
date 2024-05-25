@@ -9,10 +9,10 @@ export default async function executeQuery(query: string): Promise<any> {
   return response;
 }
 
-export function decodeBase64(encoded: string): string{
+export function decodeBase64(encoded: string): string {
   return atob(encoded);
 }
 
-export function encodeBase64(decoded: string): string{
+export function encodeBase64(decoded: string): string {
   return btoa(decoded);
 }

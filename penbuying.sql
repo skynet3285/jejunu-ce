@@ -320,7 +320,9 @@ select * from share_pension;
 ####### agenda init
 DELETE FROM agenda WHERE agenda_no >= 3;
 ALTER TABLE agenda AUTO_INCREMENT = 3;
+select * from agenda;
 
 ####### agenda_vote init
 DELETE FROM agenda_vote WHERE agenda_no >= 1;
 ALTER TABLE agenda_vote AUTO_INCREMENT = 1;
+select * from agenda_vote;
