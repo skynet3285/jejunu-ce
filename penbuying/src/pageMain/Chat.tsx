@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import executeQuery from '../module/sql';
 import ChatBox from '../layout/ChatBox';
+import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 
 interface User {
   user_id: string;
@@ -108,6 +109,7 @@ const sendChat = async (param: SendChatParams): Promise<void> => {
 
 export default function ChatMain() {
   const navigate = useNavigate();
+  const [chatTitle, setChatTitle] = useState<string>('');
   const { chatId } = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [validMsg, setValidMsg] = useState<string>('');
@@ -116,6 +118,7 @@ export default function ChatMain() {
   const [chat, setChat] = useState<Chat[] | null>(null);
   const [message, setMessage] = useState('');
   const textareaRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
     if (validMsg !== '') {
@@ -126,6 +129,7 @@ export default function ChatMain() {
 
   useEffect(() => {
     const data = sessionStorage.getItem('userInfo');
+
     if (data !== null) {
       const userInfo = JSON.parse(data) as User;
       setUser(userInfo);
@@ -168,7 +172,7 @@ export default function ChatMain() {
         setValidMsg('채팅방을 불러올수 없습니다');
         return false;
       }
-
+      setChatTitle(data.chat_title);
       return true;
     };
 
@@ -210,6 +214,22 @@ export default function ChatMain() {
     }
   }, [reload]);
 
+  useEffect(() => {
+    if (!chatContainerRef.current) {
+      return;
+    }
+    const chatContainer = chatContainerRef.current as HTMLDivElement;
+
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      console.log(
+        'scroll to bottom',
+        chatContainer.scrollTop,
+        chatContainer.scrollHeight,
+      );
+    }
+  }, [chat]);
+
   const adjustTextareaHeight = () => {
     if (!textareaRef.current) {
       return;
@@ -233,6 +253,7 @@ export default function ChatMain() {
     input.replace(/['"\\`#;]/g, '');
 
   const handleSendMessage = () => {
+    setMessage('');
     const msg = sanitizeInput(message);
 
     if (msg.trim() === '') {
@@ -243,7 +264,6 @@ export default function ChatMain() {
       user_id: user?.user_id as string,
       chat_contents: msg,
     });
-    setMessage('');
   };
 
   const handleKeyDown = (e: {
@@ -262,8 +282,26 @@ export default function ChatMain() {
   }, [message]);
 
   return (
-    <article className="flex h-screen flex-col justify-between">
-      <div className="mt-10 flex flex-col px-2">
+    <article className="flex h-[90vh] flex-col">
+      <div className="mt-10 flex h-auto w-full">
+        <button
+          className="h-auto w-auto"
+          type="button"
+          onClick={() => {
+            navigate('..');
+          }}
+        >
+          <img src={leftArrow} alt="leftArrow" />
+        </button>
+        <p className="h-[2rem] w-full text-center text-lg font-bold">
+          {chatTitle}
+        </p>
+        <div className="w-[24px]" />
+      </div>
+      <div
+        ref={chatContainerRef}
+        className={`ref=${chatContainerRef} mt-2 flex h-[75vh] flex-col space-y-1 overflow-y-auto px-2`}
+      >
         {isActive &&
           chat &&
           chat.map(c => (
@@ -275,7 +313,7 @@ export default function ChatMain() {
           ))}
       </div>
       {isActive && (
-        <div className="flex items-center px-2">
+        <div className="absolute bottom-20 flex w-full items-center px-2">
           <textarea
             ref={textareaRef}
             value={message}
@@ -283,10 +321,10 @@ export default function ChatMain() {
             onKeyDown={handleKeyDown}
             className="flex-grow resize-none overflow-hidden rounded border p-2"
             placeholder="메시지를 입력하세요."
-            rows={1} // 기본 높이를 설정합니다.
+            rows={1}
           />
           <button
-            type="button"
+            type="submit"
             onClick={handleSendMessage}
             className="ml-1 rounded bg-blue-500 px-4 py-2 text-white"
           >

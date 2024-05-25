@@ -48,7 +48,7 @@ export default function PenbuyingHome() {
   }
 
   return (
-    <main className="min-w-mobile flex h-screen w-screen flex-col">
+    <main className="flex h-screen w-screen min-w-mobile flex-col">
       <main className="h-[90vh] overflow-y-auto">
         {/* 라우팅되는 페이지가 삽입되는 자리입니다 */}
         <Routes>

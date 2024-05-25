@@ -248,6 +248,18 @@ INSERT INTO `own` (
     200000000 -- investment_amount
 );
 
+INSERT INTO `own` (
+    `user_id`,
+    `pension_id`,
+    `own_percent`,
+    `investment_amount`
+) VALUES (
+    '12345',  -- user_id
+    3,       -- pension_id
+    25,      -- own_percent
+    200000000 -- investment_amount
+);
+
 
 
 ################ Dummy insert
