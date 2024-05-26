@@ -6,12 +6,20 @@
   </head>
   <body>
     <p>Welcome to Docker's world.</p>
-    <p>5초 후에 제주대학교 홈페이지로 이동합니다.</p>
+    <p><span id="value">5</span>초 후에 제주대학교 홈페이지로 이동합니다.</p>
   </body>
   <script>
-    // 5초 후에 제주대학교 홈페이지로 이동
-    setTimeout(() => {
-      location.href = "https://www.jejunu.ac.kr/";
-    }, 5000);
+    let countdown = 5;
+    const value = document.getElementById("value");
+
+    const intervalId = setInterval(() => {
+      countdown -= 1;
+      value.textContent = countdown;
+
+      if (countdown === 0) {
+        clearInterval(intervalId);
+        location.href = "https://www.jejunu.ac.kr/";
+      }
+    }, 1000);
   </script>
 </html>
