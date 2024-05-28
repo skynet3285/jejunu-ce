@@ -4,6 +4,11 @@ import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 import pensionBackground from '../asset/imgs/pensionBackground.png';
 import hwpIcon from '../asset/imgs/hwpIcon.png';
 import { Pension, loadPensionByPensionId } from '../module/sqlOrm';
+import {
+  getFormFileContractOfSale,
+  getFormFileLocationConfirmationConsent,
+  getFormFileTermsOfUse,
+} from '../module/penbuying_form_file';
 
 export default function PensionInfoInvest() {
   const navigate = useNavigate();
@@ -89,18 +94,24 @@ export default function PensionInfoInvest() {
               <div className="p-4 font-bold">{pension.article_contents}</div>
               <div className="m-4 flex flex-col rounded-xl border border-gray-300 bg-gray-300 p-2">
                 <p className="text-sm">첨부파일</p>
-                <p className="my-1 flex text-sm">
+                <a
+                  href={getFormFileContractOfSale()}
+                  className="my-1 flex text-sm"
+                >
                   <img src={hwpIcon} alt="hwp" />
                   부동산 공유지분 매매계약서.hwp
-                </p>
-                <p className="my-1 flex text-sm">
+                </a>
+                <a
+                  href={getFormFileLocationConfirmationConsent()}
+                  className="my-1 flex text-sm"
+                >
                   <img src={hwpIcon} alt="hwp" />
                   부동산 공유지분 위치확인동의서.hwp
-                </p>
-                <p className="my-1 flex text-sm">
+                </a>
+                <a href={getFormFileTermsOfUse()} className="my-1 flex text-sm">
                   <img src={hwpIcon} alt="hwp" />
                   지분 공유 펜션 이용약관.hwp
-                </p>
+                </a>
               </div>
               <div className="mx-4 flex flex-col">
                 <input

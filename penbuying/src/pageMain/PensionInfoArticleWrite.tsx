@@ -1,44 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
-import executeQuery from '../module/sql';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 import cameraIcon from '../asset/imgs/camera.svg';
 import plusIcon from '../asset/imgs/plusBlack.svg';
 import crossIcon from '../asset/imgs/cross.svg';
 import hwpIcon from '../asset/imgs/hwpIcon.png';
-import { Pension } from '../module/sqlOrm';
-
-const insertArticle = async (data: Pension): Promise<void> => {
-  const query = `
-  INSERT INTO share_pension (
-    pension_id,
-    article_title,
-    article_contents,
-    pension_img,
-    article_active,
-    current_investment_amount,
-    total_investment_amount,
-    minimum_investment_amount,
-    number_of_participants,
-    maximum_of_participants,
-    deadline_date
-  ) VALUES (
-    ${data.pension_id},
-    '${data.article_title}',
-    '${data.article_contents}',
-    '${data.pension_img}',
-    ${data.article_active},
-    ${data.current_investment_amount},
-    ${data.total_investment_amount * 10000},
-    ${data.minimum_investment_amount * 10000},
-    ${data.number_of_participants},
-    ${data.maximum_of_participants},
-    '${data.deadline_date}'
-  )
-    `;
-
-  await executeQuery(query);
-};
+import { Pension, registerArticle } from '../module/sqlOrm';
 
 export default function PensionInfoArticleWrite() {
   const navigate = useNavigate();
@@ -60,7 +27,7 @@ export default function PensionInfoArticleWrite() {
   });
 
   const fetchPension = async () => {
-    await insertArticle(pension);
+    await registerArticle(pension);
   };
 
   const sanitizeInput = (input: string): string =>

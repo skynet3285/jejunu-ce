@@ -1,4 +1,4 @@
-import executeQuery from './sql';
+import { executeQuery } from './server_connect';
 
 // 입력값에서 특정 특수문자를 제거합니다.
 export function sanitizeInput(input: string): string {
@@ -195,6 +195,38 @@ export async function loadPensions(): Promise<Pension[] | null> {
     return data;
   }
   return null;
+}
+
+export async function registerArticle(data: Pension): Promise<void> {
+  const query = `
+  INSERT INTO share_pension (
+    pension_id,
+    article_title,
+    article_contents,
+    pension_img,
+    article_active,
+    current_investment_amount,
+    total_investment_amount,
+    minimum_investment_amount,
+    number_of_participants,
+    maximum_of_participants,
+    deadline_date
+  ) VALUES (
+    ${data.pension_id},
+    '${data.article_title}',
+    '${data.article_contents}',
+    '${data.pension_img}',
+    ${data.article_active},
+    ${data.current_investment_amount},
+    ${data.total_investment_amount * 10000},
+    ${data.minimum_investment_amount * 10000},
+    ${data.number_of_participants},
+    ${data.maximum_of_participants},
+    '${data.deadline_date}'
+  )
+    `;
+
+  await executeQuery(query);
 }
 
 export interface OwnPension {

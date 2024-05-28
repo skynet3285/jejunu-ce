@@ -24,8 +24,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "nodemon ./server/DBserver.js",
-    "dev": "concurrently \"yarn server\" \"yarn start\"",
+    "DBserver": "nodemon ./server/DBserver.js",
+    "FileServer": "nodemon ./server/FileServer.js",
+    "dev": "concurrently \"yarn DBserver\" \"yarn FileServer\" \"yarn start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
