@@ -206,7 +206,7 @@ export default function ChatMain() {
           ))}
       </div>
       {isActive && (
-        <div className="absolute bottom-40 flex w-full items-center px-2">
+        <div className="absolute bottom-[6rem] flex w-full items-center px-2">
           <textarea
             ref={textareaRef}
             value={message}
