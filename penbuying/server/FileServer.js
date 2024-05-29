@@ -1,15 +1,24 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const cors = require('cors');
 
-const serverHOST = '127.0.0.1'; // FileServer Host
-const serverPORT = 3002; // FileServer Port
+const dotenv = require('dotenv');
+dotenv.config();
 
-app.use(cors());
+const corsOrigins = JSON.parse(process.env.FILESERVER_CORS_ORIGINS);
+const corsMethods = JSON.parse(process.env.FILESERVER_CORS_METHODS);
+const corsOptions = {
+  origin: corsOrigins,
+  methods: corsMethods,
+  allowedHeaders: ['application/json'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const path = require('path');
 app.get('/file_download', (req, res) => {
   const fileName = req.query.file;
   const filePath = path.join(__dirname, './files', fileName);
@@ -22,6 +31,10 @@ app.get('/file_download', (req, res) => {
   });
 });
 
-app.listen(serverPORT, serverHOST, () => {
-  console.log(`FileServer run : http://${serverHOST}:${serverPORT}/`);
+app.listen(process.env.FILESERVER_PORT, process.env.FILESERVER_HOST, () => {
+  console.log(
+    `FILEServer run : http://${process.env.FILESERVER_HOST}:${process.env.FILESERVER_PORT}/`,
+  );
+  console.log('CORS Options:', corsOptions);
+  console.log();
 });

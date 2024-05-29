@@ -2,13 +2,23 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
-const serverHOST = '127.0.0.1'; // DBserver Host
-const serverPORT = 3001; // DBserver Port
-
-const mysql = require('mysql2');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const corsOrigins = JSON.parse(process.env.DBSERVER_CORS_ORIGINS);
+const corsMethods = JSON.parse(process.env.DBSERVER_CORS_METHODS);
+const corsOptions = {
+  origin: corsOrigins,
+  methods: corsMethods,
+  allowedHeaders: ['content-type', 'datatype'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const mysql = require('mysql2');
 const db = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
@@ -16,12 +26,6 @@ const db = mysql.createPool({
   database: process.env.MYSQL_DB,
   port: process.env.MYSQL_PORT,
 });
-
-console.log();
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.post('/sql_prompt', (req, res) => {
   const sqlQuery = req.body.query;
@@ -35,6 +39,10 @@ app.post('/sql_prompt', (req, res) => {
   });
 });
 
-app.listen(serverPORT, serverHOST, () => {
-  console.log(`DBServer run : http://${serverHOST}:${serverPORT}/`);
+app.listen(process.env.DBSERVER_PORT, process.env.DBSERVER_HOST, () => {
+  console.log(
+    `DBServer run : http://${process.env.DBSERVER_HOST}:${process.env.DBSERVER_PORT}/`,
+  );
+  console.log('CORS Options:', corsOptions);
+  console.log();
 });

@@ -1,20 +1,36 @@
 import axios from 'axios';
 
-const DBServerHOST = 'http://127.0.0.1';
+const DBServerHOST = window.location.hostname; // 'http://127.0.0.1';
 const DBServerPort = 3001;
-const DBServerUrl = `${DBServerHOST}:${DBServerPort}/sql_prompt`;
+const DBServerUrl = `http://${DBServerHOST}:${DBServerPort}/sql_prompt`;
 
-const FileServerHOST = 'http://127.0.0.1';
+const FileServerHOST = window.location.hostname; // 'http://127.0.0.1';
 const FileServerPort = 3002;
-const FileServerUrl = `${FileServerHOST}:${FileServerPort}/file_download`;
+const FileServerUrl = `http://${FileServerHOST}:${FileServerPort}/file_download`;
 
 export async function executeQuery(query: string): Promise<any> {
-  const response = await axios.post(DBServerUrl, { query });
+  const response = await axios.post(
+    DBServerUrl,
+    { query },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        dataType: 'json',
+      },
+      withCredentials: true,
+    },
+  );
   return response;
 }
 
 export async function downloadFile(filepath: string): Promise<any> {
-  const response = await axios.get(`${FileServerUrl}?file=${filepath}`);
+  const response = await axios.get(`${FileServerUrl}?file=${filepath}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      dataType: 'json',
+    },
+    withCredentials: true,
+  });
   return response;
 }
 
