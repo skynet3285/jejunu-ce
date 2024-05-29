@@ -307,6 +307,16 @@ VALUES
 (@chat_id, '1234', '문의 사항이 있어 연락드립니다', now()), 
 (@chat_id, '12345', '네, 무슨일이죠?', now());
 
+
+
+############## init data
+SET SQL_SAFE_UPDATES = 0;
+
+####### user init
+DELETE FROM user WHERE user_id NOT IN ('1234', '12345');
+select * from user;
+
+
 ####### Chat init
 DELETE FROM chat WHERE chat_no >= 3;
 ALTER TABLE chat AUTO_INCREMENT = 3;
@@ -326,3 +336,5 @@ select * from agenda;
 DELETE FROM agenda_vote WHERE agenda_no >= 1;
 ALTER TABLE agenda_vote AUTO_INCREMENT = 1;
 select * from agenda_vote;
+
+SET SQL_SAFE_UPDATES = 1;
