@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const DBServerHOST = window.location.hostname; // 'http://127.0.0.1';
+const DBServerHOST = '127.0.0.1'; // 'http://127.0.0.1';
 const DBServerPort = 3001;
 const DBServerUrl = `http://${DBServerHOST}:${DBServerPort}/sql_prompt`;
 
-const FileServerHOST = window.location.hostname; // 'http://127.0.0.1';
+const FileServerHOST = '127.0.0.1'; // 'http://127.0.0.1';
 const FileServerPort = 3002;
 const FileServerUrl = `http://${FileServerHOST}:${FileServerPort}/file_download`;
 

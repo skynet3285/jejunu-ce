@@ -10,11 +10,12 @@ const corsMethods = JSON.parse(process.env.FILESERVER_CORS_METHODS);
 const corsOptions = {
   origin: corsOrigins,
   methods: corsMethods,
-  allowedHeaders: ['application/json'],
+  allowedHeaders: ['application/json', 'datatype'],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
