@@ -5,6 +5,24 @@ export function sanitizeInput(input: string): string {
   return input.replace(/['"\\`#;]/g, '');
 }
 
+// 입력값에서 이메일 형식인지 확인합니다.
+export function isEmail(input: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/g;
+  return emailRegex.test(input);
+}
+
+// 입력값에서 전화번호 형식인지 확인합니다.
+export function isPhoneNumber(input: string): boolean {
+  const phoneRegex = /^\d{3}-\d{3,4}-\d{4}$/g;
+  return phoneRegex.test(input);
+}
+
+// 입력값에서 숫자만 있는지 확인합니다.
+export function isNumber(input: string): boolean {
+  const numberRegex = /^\d*$/;
+  return numberRegex.test(input);
+}
+
 export interface User {
   user_id: string;
   user_pw: string;

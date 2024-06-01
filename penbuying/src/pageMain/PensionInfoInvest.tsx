@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 import pensionBackground from '../asset/imgs/pensionBackground.png';
 import hwpIcon from '../asset/imgs/hwpIcon.png';
-import { Pension, loadPensionByPensionId } from '../module/sqlOrm';
+import { Pension, isNumber, loadPensionByPensionId } from '../module/sqlOrm';
 import {
   getFormFileContractOfSale,
   getFormFileLocationConfirmationConsent,
@@ -33,7 +33,7 @@ export default function PensionInfoInvest() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     // 정규식을 사용하여 숫자만 입력 허용
-    if (/^\d*$/.test(value)) {
+    if (isNumber(value)) {
       setInvestmentAmount(value); // Convert value to a number
     }
   };

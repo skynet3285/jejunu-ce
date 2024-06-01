@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import userProfile from '../asset/imgs/userDefaultProfile.png';
 import PensionOwnBox from '../component/PensionOwnBox';
 import { User, OwnPension, loadOwnPensionsByUserId } from '../module/sqlOrm';
-import { getSessionUser } from '../module/session';
+import { getSessionUser, removeSessionUser } from '../module/session';
 
 export default function My() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function My() {
                 className="rounded bg-red-700 p-2 text-white"
                 type="button"
                 onClick={() => {
-                  sessionStorage.removeItem('userInfo');
+                  removeSessionUser();
                   navigate('/');
                   alert('로그아웃 되었습니다.');
                 }}

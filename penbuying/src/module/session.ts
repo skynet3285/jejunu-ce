@@ -12,3 +12,7 @@ export function getSessionUser(): User | null {
   }
   return null;
 }
+
+export function removeSessionUser() {
+  sessionStorage.removeItem('userInfo');
+}

@@ -1,6 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import { User, registerUser, sanitizeInput } from '../module/sqlOrm';
+import {
+  User,
+  isEmail,
+  isPhoneNumber,
+  registerUser,
+  sanitizeInput,
+} from '../module/sqlOrm';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -16,6 +22,7 @@ export default function Register() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setUser(prevUser => ({
       ...prevUser,
       [name]: sanitizeInput(value),
@@ -31,14 +38,18 @@ export default function Register() {
       user.user_email === ''
     ) {
       alert('모든 항목을 입력해주세요.');
-      return;
-    }
-    try {
-      await registerUser(user);
-      alert('회원가입 성공');
-      navigate('/');
-    } catch {
-      alert('이미 존재하는 회원입니다.');
+    } else if (!isPhoneNumber(user.user_phone_number)) {
+      alert('전화번호 형식이 아닙니다.');
+    } else if (!isEmail(user.user_email)) {
+      alert('이메일 형식이 아닙니다.');
+    } else {
+      try {
+        await registerUser(user);
+        alert('회원가입 성공');
+        navigate('/');
+      } catch {
+        alert('이미 존재하는 회원입니다.');
+      }
     }
   };
 
