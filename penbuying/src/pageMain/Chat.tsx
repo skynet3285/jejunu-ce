@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
-import ChatBox from '../layout/ChatBox';
+import ChatBox from '../component/ChatBox';
 import leftArrow from '../asset/imgs/leftArrowIcon.svg';
 import {
   User,
@@ -125,7 +125,7 @@ export default function ChatMain() {
   useEffect(() => {
     const interval = setInterval(() => {
       setReload(prevReload => !prevReload);
-    }, 500);
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);

@@ -27,7 +27,7 @@ export default function InvestGuide() {
         </a>
         <div className="h-4" />
         <a
-          href="guide/tutorial/"
+          href="guide/building/"
           className="flex h-[7rem] w-[21rem] flex-col justify-center rounded-lg border-black px-4 shadow-xl"
         >
           <p className="mb-2 self-center text-lg font-bold">
