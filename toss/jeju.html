@@ -9,8 +9,8 @@
     <p><span id="value">5</span>초 후에 제주대학교 홈페이지로 이동합니다.</p>
   </body>
   <script>
-    let countdown = 5;
     const value = document.getElementById("value");
+    let countdown = parseInt(value.textContent);
 
     const intervalId = setInterval(() => {
       countdown -= 1;
@@ -18,7 +18,7 @@
 
       if (countdown === 0) {
         clearInterval(intervalId);
-        window.location = "https://www.jejunu.ac.kr/";
+        window.location = "https://www.jejunu.ac.kr/"; // client side redirect
       }
     }, 1000);
   </script>
