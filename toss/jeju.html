@@ -10,7 +10,7 @@
   </body>
   <script>
     const value = document.getElementById("value");
-    let countdown = parseInt(value.textContent);
+    let countdown = parseInt(value.textContent, 10);
 
     const intervalId = setInterval(() => {
       countdown -= 1;
