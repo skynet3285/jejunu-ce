@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to Docker's world</title>
+  </head>
+  <body>
+    <p>Welcome to Docker's world.</p>
+    <p><span id="value">5</span>초 후에 제주대학교 홈페이지로 이동합니다.</p>
+  </body>
+  <script>
+    const value = document.getElementById("value");
+    let countdown = parseInt(value.textContent, 10);
+
+    const intervalId = setInterval(() => {
+      countdown -= 1;
+      value.textContent = countdown;
+
+      if (countdown === 0) {
+        clearInterval(intervalId);
+        window.location = "https://www.jejunu.ac.kr/"; // client side redirect
+      }
+    }, 1000);
+  </script>
+</html>
